@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Subtraction</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function decrease_first () {
+                var msg = first.to_number() + " - " + second.to_number() + " = ";
+                first.decrease_by(second);
+                msg += first.to_number();
+                console.log( msg );
+                _log( first.to_collection() );
+                
+                setTimeout(regenerate_second, 17);
+            }
+            function regenerate_second () {
+                var msg = second.to_number() + " - " + first.to_number() + " = ";
+                second = second.subtract(first);
+                msg += second.to_number();
+                console.log( msg );
+                _log( second.to_collection() );
+                
+                if ( second.to_collection().length > 1 || second.to_number() > 1 )
+                    setTimeout(decrease_first, 17);
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="decrease_first()">
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var first = new BigNumber(20);
+            first.from_decimal( "11111460156937785151929026842503960837766832936" );
+            var second = new BigNumber(20);
+            second.from_decimal( "6867260041627791953052057353082063289320596021" );
+            
+            _log( first.to_collection() );
+            _log( second.to_collection() );
+                
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Shift right</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function collatz () {
+                var collection = reference.to_collection();
+                if ( collection.length == 1 && !(collection[0] ^ 1) )
+                    return;
+                if ( collection[collection.length - 1] & 1 ) {
+                    var even = false;
+                    var msg = reference.to_number() + " * 3 + 1 = ";
+                    reference = reference.multiplicate(three);
+                    reference = reference.add(one);
+                    msg += reference.to_number();
+                }
+                else {
+                    var even = true;
+                    var msg = "&nbsp;&nbsp;&nbsp;&nbsp;" + reference.to_number() + " >> 1 = ";
+                    reference.shift_by(-1);
+                    msg += reference.to_number();
+                }
+                console.log( msg );
+                _log( reference.to_collection() );
+                if ( even )
+                    collatz();
+                else
+                    setTimeout(collatz, 17);
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="collatz()">
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var reference = new BigNumber(8, 1);
+            reference.from_decimal( "2602714556700227743" );
+            var one = new BigNumber(1, 1);
+            one.from_number(1);
+            var three = new BigNumber(1, 1);
+            three.from_number(3);
+            
+            _log( reference.to_collection() );
+                
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Square root</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function golden_ration () {
+                var msg, result, sqrt5;
+                for ( var i = 0; i < 10; i++ ) {
+                    result = num.sqrt();
+                    sqrt5 = result.to_number().toString();
+                    _log( result.to_collection() );
+                    result = new BigNumber(num.to_collection().length * 2);
+                    result.from_decimal( sqrt5.replace(/2/, "3") );
+                    result.shift_by(-1);
+                    msg = factor.to_number() + " / 2 * (1 + &radic;5)= " + result.to_number();
+                    num = num.multiplicate(hundred);
+                    factor = factor.multiplicate(hundred);
+                    console.log( msg );
+                }
+            }
+            
+            /**
+             * Demonstartion purpose
+             */
+            function square_root () {
+                var msg, result;
+                for ( var i = 0; i < 10; i++ ) {
+                    result = num.sqrt();
+                    _log( result.to_collection() );
+                    msg = "&radic;" + num.to_number() + " &asymp; " + result.to_number();
+                    num = num.multiplicate(hundred);
+                    console.log( msg );
+                }
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="golden_ration()">
+        
+        <div class="section">
+            <header>
+                <p></p>
+                <p class="view">
+                    <a href="javascript: golden_ration()">
+                        More...
+                    </a>
+                </p>
+            </header>
+            
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console for approximation to &radic;5</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var hundred = new BigNumber(1, 2);
+            hundred.from_number( 100 );
+            var num = new BigNumber(1, 2);
+            num.from_number( 5 );
+            var factor = new BigNumber(1, 2);
+            factor.from_number( 1 );
+                
+        </script>
+        
+    </body>
+</html>

@@ -259,7 +259,7 @@ function BigNumber (byte_length, bytes_per_entry, src_typed_array) {
         
         var tmp_result, do_it;
         for ( var bit = (core - 1); bit >= 1; bit-- ) {
-            tmp_result = myself.copy();
+            tmp_result = myself.copy(src_collection.length * bytes_per_entry);
             tmp_result.shift_by(bit);
             set_bit(bit * 2 - 1, tmp_result.to_collection());
             do_it = compare( src_collection, tmp_result.to_collection() );

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Shift left</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function shift () {
+                while ( reference.to_collection()[0] < (1 << 15) ) {
+                    var msg = "(" + reference.to_number() + " << 1) + 1 = ";
+                    reference.shift_by(1);
+                    reference.increase_by(one);
+                    msg += reference.to_number();
+                    console.log( msg );
+                    _log( reference.to_collection() );
+                }
+                _log( "" );
+                console.log( "" );
+                
+                 while ( reference.to_collection()[0] ) {
+                    msg = reference.to_number() + " << 1 = ";
+                    reference.shift_by(1);
+                    msg += reference.to_number();
+                    console.log( msg );
+                    _log( reference.to_collection() );
+                 }
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="shift()">
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var reference = new BigNumber(16);
+            reference.from_number( 1 );
+            var one = new BigNumber(1, 2);
+            one.from_number(1);
+            _log( reference.to_collection() );
+                
+        </script>
+        
+    </body>
+</html>

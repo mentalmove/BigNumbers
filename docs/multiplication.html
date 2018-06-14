@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Multiplication</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function factorise () {
+                var msg;
+                for ( var i = 0; i < 10; i++ ) {
+                    msg = first.to_number() + "! = " + second.to_number();
+                    console.log( msg );
+                    _log( second.to_collection() );
+                    first.increase_by(one);
+                    second = first.multiplicate(second);
+                }
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="factorise()">
+        
+        <div class="section">
+            <header>
+                <p></p>
+                <p class="view">
+                    <a href="javascript: factorise()">
+                        More...
+                    </a>
+                </p>
+            </header>
+            
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var first = new BigNumber(1, 2);
+            first.from_number( 1 );
+            var second = first.copy();
+            var one = first.copy();
+                
+        </script>
+        
+    </body>
+</html>
