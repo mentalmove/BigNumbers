@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Modulo-Exponentiation</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            function hex_displayable (hex_string) {
+                var result = "";
+                for ( var i = 0; i < hex_string.length; i += 64 ) {
+                    result += hex_string.substring(i, i + 64);
+                    result += "<br>";
+                }
+                return result;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function decode (encoded) {
+                
+                console.log( "<i>decoded</i> = <i>encoded</i> ^ <i>second prime</i> % <i>modulus</i> [hex]" );
+                var decoded = encoded.mod_pow(second_prime, modulus);
+                console.log( hex_displayable(decoded.to_hex()) );
+                _log( decoded.to_collection() );
+                
+                console.log( "<i>decoded</i> [plain]" );
+                console.log( atob(decoded.to_base64()) );
+            }
+            function encode () {
+                
+                iD("the_link").style.display = "none";
+                
+                var encoded = clear.mod_pow(first_prime, modulus);
+                console.log( "<i>encoded</i> = <i>clear text</i> ^ <i>first prime</i> % <i>modulus</i> [hex]" );
+                console.log( hex_displayable(encoded.to_hex()) );
+                _log( encoded.to_collection() );
+                
+                iD("the_link").innerHTML = "Decode";
+                iD("the_link").onclick = function () {
+                    var msg = document.createElement("span");
+                    msg.innerHTML = "A little patience, please...";
+                    iD("the_link").parentNode.replaceChild(msg, iD("the_link"));
+                    setTimeout(decode, 41, encoded);
+                    return false;
+                };
+                
+                console.log( "" );
+                console.log( "" );
+                
+                setTimeout(function () {
+                    iD("the_link").style.display = "inline";
+                }, 41);
+            }
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <header>
+                <p></p>
+                <p class="view">
+                    <a id="the_link" href="#" onclick="encode(); return false">
+                        Encode
+                    </a>
+                </p>
+            </header>
+            
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var first_prime = new BigNumber(4);
+            first_prime.from_decimal( "65537" );
+            var second_prime = new BigNumber(128);
+            second_prime.from_hex( "42:b2:c0:58:8e:57:57:ce:2a:65:31:82:f7:53:ba:8e:83:72:88:59:6c:f7:01:c4:c7:46:ca:17:fa:44:55:5e:d3:e4:a7:3b:21:2a:dc:12:bb:6d:11:b5:d3:fe:95:80:1c:b6:ac:e9:f7:cb:d9:df:bc:01:8a:5c:04:2e:db:f5:38:9e:3e:57:94:db:18:b7:da:47:d3:44:fe:6a:95:88:64:ae:cf:e1:d0:85:f7:53:50:04:40:e4:b0:fb:85:fd:32:ff:9d:ac:78:6d:e4:41:f9:fc:c5:e8:23:e9:97:c7:59:04:80:9d:90:15:e7:84:9d:0f:c4:87:97:70:c6:a1" );
+            var modulus = new BigNumber(128);
+            modulus.from_hex( "00:c3:f0:61:fd:7b:bc:5d:ee:25:9b:ba:8d:d1:ec:71:e7:cf:72:f1:d3:e1:aa:20:cb:2b:32:fa:1f:3d:56:a5:1e:4c:2a:95:fa:6d:79:22:86:2f:63:e7:91:71:d3:be:f1:94:01:2a:8b:c0:c5:06:74:ad:a8:3d:f0:1f:e3:5c:0c:dd:ca:33:b4:29:1a:d4:b8:d8:e2:68:48:b7:a4:34:8a:28:5b:10:fd:81:7a:40:95:f8:76:74:81:fe:55:db:ca:98:1d:8c:43:98:85:ba:86:b6:10:ce:b1:fb:2c:d6:a6:f8:21:fd:1f:c0:3c:08:2b:d3:ef:87:1b:bb:63:1b:6f" );
+            var msg = "Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do.";
+            var clear = new BigNumber(msg.length, 2);
+            clear.from_base64(btoa(msg));
+            
+            console.log( "<i>first prime</i> [decimal]" );
+            console.log( first_prime.to_number() );
+            console.log( "" );
+            console.log( "<i>second prime</i> [hex]" );
+            console.log( hex_displayable(second_prime.to_hex()) );
+            console.log( "<i>modulus</i> [hex]" );
+            console.log( hex_displayable(modulus.to_hex()) );
+            console.log( "<i>clear text</i> [plain]" );
+            console.log( msg );
+            console.log( "" );
+            console.log( "<i>clear text</i> [hex]" );
+            console.log( hex_displayable(clear.to_hex()) );
+            
+            _log( first_prime.to_collection() );
+            _log( second_prime.to_collection() );
+            _log( modulus.to_collection() );
+            _log( clear.to_collection() );
+            
+            console.log( "" );
+            console.log( "" );
+                
+        </script>
+        
+    </body>
+</html>
