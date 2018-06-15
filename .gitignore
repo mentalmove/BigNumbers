@@ -1,0 +1,12 @@
+
+*.php
+
+BigNumber_BACKUP.js
+
+docs/compress
+
+*.properties
+
+*.xml
+
+worker.js
