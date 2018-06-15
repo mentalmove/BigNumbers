@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Exponentiation</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function power () {
+                if ( reference.to_collection()[0] >= 254 ) {
+                    var header = iD("header");
+                    if ( header )
+                        header.parentNode.removeChild(header);
+                    if ( reference.to_collection()[0] >= 255 )
+                        return;
+                }
+                reference.increase_by(one);
+                var result;
+                var max = Math.max(10, reference.to_number() / 2);
+                for ( var i = 1; i <= max; i++ ) {
+                    result = reference.pow(i);
+                    console.log( reference.to_number() + "^" + i + " = " + result.to_number() );
+                    _log( result.to_collection() );
+                }
+                var br = document.createElement("br");
+                iD("debug_zone").appendChild(br);
+                if ( reference.to_collection()[0] % 10 )
+                    setTimeout(power, 17);
+                else
+                    iD("header").style.display = "block";
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="power()">
+        
+        <div class="section">
+            <header id="header" style="display: none">
+                <p></p>
+                <p class="view">
+                    <a href="javascript: iD('header').style.display = 'none'; power()">
+                        More...
+                    </a>
+                </p>
+            </header>
+            
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var reference = new BigNumber(1);
+            reference.from_number( 1 );
+            var one = reference.copy();
+                
+        </script>
+        
+    </body>
+</html>

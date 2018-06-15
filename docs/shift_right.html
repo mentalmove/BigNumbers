@@ -21,7 +21,8 @@
             var _log = console.log;
             console.log = debug;
             
-            
+            var PACKAGE = 10;
+            var counter = 0;
             function collatz () {
                 var collection = reference.to_collection();
                 if ( collection.length == 1 && !(collection[0] ^ 1) )
@@ -43,8 +44,16 @@
                 _log( reference.to_collection() );
                 if ( even )
                     collatz();
-                else
-                    setTimeout(collatz, 17);
+                else {
+                    if ( !(++counter % PACKAGE) ) {
+                        counter = 0;
+                        return;
+                    }
+                    if ( counter % 2 )
+                        collatz();
+                    else
+                        setTimeout(collatz, 17);
+                }
             }
             
         </script>
@@ -53,6 +62,15 @@
     <body onload="collatz()">
         
         <div class="section">
+            <header>
+                <p></p>
+                <p class="view" id="more_link">
+                    <a href="javascript: collatz()">
+                        More...
+                    </a>
+                </p>
+            </header>
+            
             <pre id="debug_zone"></pre>
         </div>
         
@@ -69,6 +87,7 @@
         <script type="text/javascript">
                 
             var reference = new BigNumber(8, 1);
+            // 2602714556700227743
             reference.from_decimal( "2602714556700227743" );
             var one = new BigNumber(1, 1);
             one.from_number(1);

@@ -22,7 +22,7 @@
             console.log = debug;
             
             
-            function golden_ration () {
+            function golden_ratio () {
                 var msg, result, sqrt5;
                 for ( var i = 0; i < 10; i++ ) {
                     result = num.sqrt();
@@ -31,9 +31,8 @@
                     result = new BigNumber(num.to_collection().length * 2);
                     result.from_decimal( sqrt5.replace(/2/, "3") );
                     result.shift_by(-1);
-                    msg = factor.to_number() + " / 2 * (1 + &radic;5)= " + result.to_number();
+                    msg = "(1 + &radic;5) / 2 &asymp; " + result.to_number().toString().replace(/^16/, "1.6");
                     num = num.multiplicate(hundred);
-                    factor = factor.multiplicate(hundred);
                     console.log( msg );
                 }
             }
@@ -55,13 +54,13 @@
         </script>
         
     </head>
-    <body onload="golden_ration()">
+    <body onload="golden_ratio()">
         
         <div class="section">
             <header>
                 <p></p>
                 <p class="view">
-                    <a href="javascript: golden_ration()">
+                    <a href="javascript: golden_ratio()">
                         More...
                     </a>
                 </p>
@@ -77,7 +76,7 @@
                 </a>
             </p>
             <p> </p>
-            <p><small><small>Also watch console for approximation to &radic;5</small></small></p>
+            <p><small><small>Approximation of &radic;5, &radic;500, &radic;50000... in console</small></small></p>
         </footer>
         
         <script type="text/javascript">
@@ -86,8 +85,6 @@
             hundred.from_number( 100 );
             var num = new BigNumber(1, 2);
             num.from_number( 5 );
-            var factor = new BigNumber(1, 2);
-            factor.from_number( 1 );
                 
         </script>
         

@@ -17,6 +17,10 @@ html, body {
     padding-top: 2%;
     line-height: 1.6em;
 }
+.view {
+    position: relative;
+    z-index: 2;
+}
 
 header, footer {
     width: 270px;
