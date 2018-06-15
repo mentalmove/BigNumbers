@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Modulo</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function modulo_di_pisa () {
+                var taken = collection.shift();
+                var result = taken.mod(collection[1]);
+                var msg = taken.to_number() + " % " + collection[1].to_number() + " = " + result.to_number();
+                collection.push(result);
+                console.log( msg );
+                
+                var col = result.to_collection();
+                if ( col.length >= 2 || col[0] >= 2 )
+                    setTimeout(modulo_di_pisa, 17);
+                
+                _log( col );
+            }
+            
+        </script>
+        
+    </head>
+    <body onload="modulo_di_pisa()">
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var collection = [];
+            var tmp = new BigNumber(13, 1);
+            tmp.from_decimal( "212207101440105399533740733471" );
+            collection.push( tmp );
+            tmp = new BigNumber(13, 1);
+            tmp.from_decimal( "131151201344081895336534324866" );
+            collection.push( tmp );
+            tmp = new BigNumber(13, 1);
+            tmp.from_decimal( "81055900096023504197206408605" );
+            collection.push( tmp );
+            
+            _log( collection[0].to_collection() );
+            _log( collection[1].to_collection() );
+            _log( collection[2].to_collection() );
+                
+        </script>
+        
+    </body>
+</html>
