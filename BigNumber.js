@@ -77,6 +77,24 @@ function BigNumber (byte_length, bytes_per_entry, src_typed_array) {
             }
         }
     }
+    function shift_right_debug (bit) {
+        
+        var i;
+        var entry = parseInt( bit / bits );
+        if ( entry ) {
+            for ( i = typed_array.length - 1; i >= entry; i-- ) {
+                typed_array[i] = typed_array[i - entry];
+                typed_array[i - entry] = 0;
+            }
+            if ( entry * 2 >= typed_array.length ) {
+                for ( i = 0; i < entry; i++ )
+                    typed_array[i] = 0;
+            }
+        }
+        bit %= bits;
+        
+        _log( bit );
+    }
     function shift_right (bit) {
         
         var i;
@@ -85,6 +103,10 @@ function BigNumber (byte_length, bytes_per_entry, src_typed_array) {
             for ( i = typed_array.length - 1; i >= entry; i-- ) {
                 typed_array[i] = typed_array[i - entry];
                 typed_array[i - entry] = 0;
+            }
+            if ( entry * 2 >= typed_array.length ) {
+                for ( i = 0; i < entry; i++ )
+                    typed_array[i] = 0;
             }
         }
         bit %= bits;

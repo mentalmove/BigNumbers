@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Hex PI calculation</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+            
+            var one = new BigNumber(1, 2);
+            one.from_number(1);
+            var three = new BigNumber(1, 2);
+            three.from_number(3);
+            
+            console.log( "/***********************************************************************" );
+            console.log( "* &pi; = &sum; (1/16)^n * (4/(8n + 1) - 2/(8n + 4) - 1/(8n + 5) - 1/(8n + 6)) *" );
+            console.log( "***********************************************************************/" );
+            console.log( "" );
+            console.log( "PI = 0" );
+            
+            var digits = 101;
+            var hex_pi = new BigNumber(Math.ceil(digits / 2) + 2, 2);
+            var exp, tmp, denominator, msg;
+            for ( var k = 0; k < digits; k++ ) {
+                exp = new BigNumber(Math.ceil(digits / 2) + 2, 2);
+                exp.from_number(1);
+                exp.shift_by( 4 * (digits - k) );
+                
+                denominator = new BigNumber(1, 2);
+                denominator.from_number(8 * k + 1);
+                
+                tmp = exp.copy();
+                tmp.shift_by(2);
+                tmp = tmp.divide(denominator);
+                hex_pi.increase_by(tmp);
+                
+                denominator.increase_by(three);
+                tmp = exp.copy();
+                tmp.shift_by(1);
+                tmp = tmp.divide(denominator);
+                hex_pi.decrease_by(tmp);
+                
+                denominator.increase_by(one);
+                tmp = exp.copy();
+                tmp = tmp.divide(denominator);
+                hex_pi.decrease_by(tmp);
+                
+                denominator.increase_by(one);
+                tmp = exp.copy();
+                tmp = tmp.divide(denominator);
+                hex_pi.decrease_by(tmp);
+                
+                _log( hex_pi.to_collection() );
+                
+                if ( k < 10 ) {
+                    tmp = hex_pi.multiplicate(one);
+                    tmp.shift_by( -4 * (digits - k - 1) );
+                    msg = "PI &asymp; PI + ( " + 4 + "/" + (8 * k + 1) + " - " + 2 + "/" + (8 * k + 4) + " - " + 1 + "/" + (8 * k + 5) + " - " + 1 + "/" + (8 * k + 6) + " ) >> " + (4 * k) + " &asymp; ";
+                    msg += tmp.to_hex().replace(/^0?3/, "3.").replace(/\.$/, "");
+                    console.log( msg );
+                }
+            }
+            
+            hex_pi.shift_by(-8);
+            
+            _log( "" );
+            console.log( "..." );
+            console.log( "" );
+            console.log( "PI [hex]" );
+            
+            _log( hex_pi.multiplicate(one).to_collection() );
+            console.log( hex_pi.to_hex().replace(/3/, "3.") );
+            
+            var decimal_factor = new BigNumber(1, 2);
+            decimal_factor.from_number(10);
+            decimal_factor = decimal_factor.pow(digits - 1);
+            
+            var decimal_pi = new BigNumber(hex_pi.to_collection().length * 2, 2);
+            decimal_pi.from_hex( hex_pi.to_hex().replace(/3/, "") );
+            decimal_pi = decimal_pi.multiplicate(decimal_factor);
+            
+            console.log( "" );
+            console.log( "PI [decimal]" );
+            
+            decimal_pi.shift_by( 0 - (4 * (digits - 2)) );
+            _log( decimal_pi.multiplicate(one).to_collection() );
+            console.log( "3." + decimal_pi.to_number() );
+               
+                
+        </script>
+        
+    </body>
+</html>
