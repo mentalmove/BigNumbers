@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Square root</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="../BigNumber.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+            
+            var one = new BigNumber(1, 2);
+            one.from_number(1);
+            var three = new BigNumber(1, 2);
+            three.from_number(3);
+            
+            var digits = 101;
+            var hex_pi = new BigNumber(Math.ceil(digits / 2) + 2, 2);
+            var exp, tmp, denominator;
+            for ( var k = 0; k < digits; k++ ) {
+                exp = new BigNumber(Math.ceil(digits / 2) + 2, 2);
+                exp.from_number(1);
+                exp.shift_by( 4 * (digits - k) );
+                
+                denominator = new BigNumber(1, 2);
+                denominator.from_number(8 * k + 1);
+                
+                tmp = exp.copy();
+                tmp.shift_by(2);
+                tmp = tmp.divide(denominator);
+                hex_pi.increase_by(tmp);
+                
+                denominator.increase_by(three);
+                tmp = exp.copy();
+                tmp.shift_by(1);
+                tmp = tmp.divide(denominator);
+                hex_pi.decrease_by(tmp);
+                
+                denominator.increase_by(one);
+                tmp = exp.copy();
+                tmp = tmp.divide(denominator);
+                hex_pi.decrease_by(tmp);
+                
+                denominator.increase_by(one);
+                tmp = exp.copy();
+                tmp = tmp.divide(denominator);
+                hex_pi.decrease_by(tmp);
+            }
+            
+            hex_pi.shift_by(-8);
+            
+            _log( hex_pi.to_collection() );
+            console.log( hex_pi.to_hex().replace(/3/, "3.") );
+            
+            var decimal_factor = new BigNumber(1, 2);
+            decimal_factor.from_number(10);
+            decimal_factor = decimal_factor.pow(digits - 1);
+            
+            var decimal_pi = new BigNumber(hex_pi.to_collection().length * 2, 2);
+            decimal_pi.from_hex( hex_pi.to_hex().replace(/3/, "") );
+            decimal_pi = decimal_pi.multiplicate(decimal_factor);
+            
+            decimal_pi.shift_by( 0 - (4 * (digits - 2)) );
+            _log( decimal_pi.to_collection() );
+            _log( decimal_pi.to_hex() );
+            console.log( "3." + decimal_pi.to_number() );
+            
+            /*for ( var j = 0; j <= 7 - 1; j++ ) {
+                decimal_pi.shift_by( -4 );
+                //_log( decimal_pi.to_collection() );
+                //_log( decimal_pi.to_hex() );
+                console.log( decimal_pi.to_number() + " (" + (j + 1) + ")" );
+            }*/
+            
+            /*
+            function new_sigma (k, l, n) {
+                
+                var numerator;
+                var denominator = 8 * k + l;
+                var left_sum = 0;
+                for ( var i = 0; i < k; i++ ) {
+                    left_sum += Math.pow(16, n - i);
+                }
+                left_sum %= denominator;
+                
+                //_log( left_sum );
+                
+            }
+            
+            function sigma (k, l, n) {
+                var denominator = 8 * k + l;
+                var numerator = Math.pow(16, n - k);
+                //_log( denominator + " | " + (numerator % denominator / denominator) );
+                return numerator / denominator;
+            }
+            function four_digits (k, n) {
+                
+                var r = 4 * new_sigma(k, 1, n);
+                r -= 2 * new_sigma(k, 4, n);
+                r -= new_sigma(k, 5, n);
+                r -= new_sigma(k, 6, n);
+                
+                var result = 4 * sigma(k, 1, n);
+                result -= 2 * sigma(k, 4, n);
+                result -= sigma(k, 5, n);
+                result -= sigma(k, 6, n);
+                return result;
+            }
+            
+            var factor, digit;
+            var n = 6;
+            var total = 0;
+            for ( var k = 0; k < n; k++ ) {
+                factor = (8 * k + 1) * (8 * k + 4) * (8 * k + 5) * (8 * k + 6);
+                digit = four_digits(k, n, factor);
+                total += digit;
+                console.log( total / Math.pow(16, n) + " | " + digit );
+            }
+            
+            // 3.243F6A8885A
+            
+            console.log( "---" );
+            
+            
+            
+            var factor, sum;
+            total = 0;
+            var k;
+            var n = 8;
+            var total2 = 0;
+            for ( k = 0; k < n; k++ ) {
+                factor = (8 * k + 1) * (8 * k + 4) * (8 * k + 5) * (8 * k + 6);
+                //factor >>= 2;
+                sum = 4 / (8 * k + 1);
+                sum -= 2 / (8 * k + 4);
+                sum -= 1 / (8 * k + 5);
+                sum -= 1 / (8 * k + 6);
+                //_log( Math.pow(16, k - 1) * (4 * sigma(k, 1, n, factor) - 2 * sigma(k, 4, n, factor) - sigma(k, 5, n, factor) - sigma(k, 6, n, factor)) );
+                //_log( "---" );
+                total *= 16;
+                total += sum;
+                //total %= 16;
+                
+                total2 += parseInt(Math.pow(16, n - k) * 4 / (8 * k + 1));
+                total2 -= parseInt(Math.pow(16, n - k) * 2 / (8 * k + 4));
+                total2 -= parseInt(Math.pow(16, n - k) / (8 * k + 5));
+                total2 -= parseInt(Math.pow(16, n - k) / (8 * k + 6));
+                
+                //console.log( (parseInt(((Math.pow(16, k - 1) * (total / Math.pow(16, k))) % 1) * 16)).toString(16) );
+                // Math.round(factor * sum)
+                console.log( parseInt(total2 / Math.pow(16, n - k)) % 16 + " | " + (parseInt(((total / 16) % 1) * 16)) + " | " + (total / Math.pow(16, k)) + " | " + parseInt(total % 16).toString(16) + " | " + (factor / 8) );
+                
+                //console.log( (sum * 1) + " | " + (total / Math.pow(16, k)) + " ||| " + ((total / Math.pow(16, k)) - (Math.pow(16, k + 1) / factor)) + " | " + factor );
+            }
+            /*
+            ak, bk = (120 * k**2 + 151 * k + 47,
+                  512 * k**4 + 1024 * k**3 + 712 * k**2 + 194 * k + 15)
+        a, b = (16 * a * bk + ak * b, b * bk)
+        digit, a = divmod(a, b)
+        */
+               
+                
+        </script>
+        
+    </body>
+</html>
