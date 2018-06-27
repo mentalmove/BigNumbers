@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Chinese remainder theorem</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            function hex_displayable (hex_string) {
+                var result = "";
+                for ( var i = 0; i < hex_string.length; i += 64 ) {
+                    result += hex_string.substring(i, i + 64);
+                    result += "<br>";
+                }
+                return result;
+            }
+            function shorten (mixed) {
+                if ( (typeof mixed).toUpperCase() == "STRING" && mixed.length > 24 )
+                    return mixed.substr(0, 16) + "...";
+                return mixed;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function slow_chinese_euclid (a, b, functions) {
+                
+                _log( a.to_collection() );
+                
+                var greece = document.createElement("span");
+                var chinese = document.createElement("span");
+                iD("debug_zone").appendChild(greece);
+                iD("debug_zone").appendChild(chinese);
+                iD("debug_zone").appendChild(document.createElement("br"));
+                iD("debug_zone").appendChild(document.createElement("br"));
+                
+                var end_fnc = (!functions.length) ? finished : null;
+                
+                var div = a.divide(b, true);
+                var mod = div.modulo;
+                greece.innerHTML = shorten(a.to_number()) + " / " + b.to_number() + " = " + shorten(div.to_number());
+                var mod_collection = mod.to_collection();
+                if ( mod_collection.length > 1 || mod_collection[0] )
+                    greece.innerHTML += " <span style='color: silver'>R </span>" + mod.to_number();
+                greece.innerHTML += "<br>";
+                
+                var next = function (collection) {
+                    
+                    var following = end_fnc || functions.pop();
+                    
+                    var text;
+                    var mul = collection[1].multiplicate(div);
+                    var result = collection[0].add(mul);
+                    if ( collection[1].negative )
+                        text = shorten(result.to_number()) + " * " + b.to_number() + " - " + collection[1].to_number() + " * " + shorten(a.to_number()) + " = " + 1;
+                    else {
+                        result.negative = true;
+                        text = collection[1].to_number() + " * " + a.to_number() + " - " + result.to_number() + " * " + b.to_number() + " = " + 1;
+                    }
+                    
+                    var col_0_col = collection[0].to_collection();
+                    var col_1_col = collection[1].to_collection();
+                    _log( col_0_col );
+                    _log( col_1_col );
+                    var result_col = result.to_collection();
+                    var other_text = ((col_0_col.length > 1 || col_0_col[0]) && collection[0].negative) ? "-" : "";
+                    other_text += collection[0].to_number();
+                    other_text += " - ";
+                    other_text += ((col_1_col.length > 1 || col_1_col[0]) && collection[1].negative) ? "-" : "";
+                    other_text += collection[1].to_number();
+                    other_text += " * " + shorten(div.to_number()) + " = ";
+                    other_text += ((result_col.length > 1 || result_col[0]) && result.negative) ? "-" : "";
+                    other_text += shorten(result.to_number());
+                    
+                    chinese.innerHTML = "<i>" + other_text + "</i>" + "<br>";
+                    chinese.innerHTML += text;
+                    
+                    var next_collection = [
+                        collection[1],
+                        result
+                    ];
+
+                    setTimeout(following, 17, next_collection);
+                };
+                functions.push(next);
+                
+                if ( mod_collection.length > 1 || mod_collection[0] )
+                    setTimeout(slow_chinese_euclid, 17, b, mod, functions);
+                else {
+                    var go_back = functions.pop();
+                    var first = one.copy();
+                    var second = new BigNumber(2);
+                    second.negative = true;
+                    var go_back_collection = [first, second];
+                    setTimeout(go_back, 41, go_back_collection);
+                    _log( "" );
+                }
+            }
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+            
+            var one = new BigNumber(2);
+            one.from_number(1);
+            
+            var p1 = new BigNumber(64);
+            p1.from_hex( "00:eb:0f:4e:cb:e0:ca:be:0f:e1:78:9f:af:b0:ae:ee:b7:6f:32:11:59:6e:95:66:a8:88:57:c2:95:94:ec:80:c7:e8:38:c2:70:f5:61:54:cc:f0:cd:3f:c4:6d:1f:56:ae:bd:96:af:7d:75:7d:a7:6a:96:c6:38:28:3b:98:d7:f1" );
+            var p2 = new BigNumber(64);
+            p2.from_hex( "00:d5:64:e6:49:50:7c:a3:dc:e1:56:b1:ac:23:10:d0:54:34:f3:bf:4a:d6:8c:66:fa:31:c7:b9:c0:0c:d3:c6:d8:95:b2:ae:13:26:4c:a7:ea:83:ac:b1:f9:63:4c:9b:01:80:c3:36:ef:6e:7e:b7:d8:78:32:63:d4:f6:cb:89:5f" );
+            var modulus = p1.multiplicate(p2);
+            
+            var e = new BigNumber(4);
+            e.from_decimal( "65537" );
+            
+            console.log( "<i>p1</i> [hex]" );
+            console.log( p1.to_hex() );
+            console.log( "" );
+            console.log( "<i>p2</i> [hex]" );
+            console.log( p2.to_hex() );
+            console.log( "" );
+            console.log( "<i>modulus</i> = <i>p1</i> * <i>p2</i> [hex]" );
+            console.log( hex_displayable(modulus.to_hex()) );
+            console.log( "" );
+            
+            _log( p1.to_collection() );
+            _log( p2.to_collection() );
+            _log( "" );
+            
+            p1.decrease_by(one);
+            p2.decrease_by(one);
+            var phi = p1.multiplicate(p2);
+            
+            console.log( "<i>phi</i> = (<i>p1</i> - 1) * (<i>p2</i> - 1) [hex]" );
+            console.log( hex_displayable(phi.to_hex()) );
+            console.log( "" );
+            console.log( "<i>e</i> [decimal]" );
+            console.log( e.to_number() );
+            console.log( "" );
+            console.log( "<i>d</i> [hex]" );
+            console.log( "<span id='result'>???</span>" );
+            console.log( "" );
+            console.log( "" );
+            console.log( "" );
+            
+            function finished (result) {
+                iD("result").innerHTML = hex_displayable(result[1].to_hex()) + "&nbsp;&nbsp;&nbsp;&nbsp;See also at <a href='mod_pow.html'>RSA</a> - Page";
+                _log( "" );
+                _log( result[1].to_collection() );
+            }
+            slow_chinese_euclid(phi, e, []);
+                
+        </script>
+        
+    </body>
+</html>
