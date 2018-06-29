@@ -26,7 +26,7 @@
             }
             function shorten (mixed) {
                 if ( (typeof mixed).toUpperCase() == "STRING" && mixed.length > 24 )
-                    return mixed.substr(0, 16) + "...";
+                    return "<span title='" + mixed + "'>" + mixed.substr(0, 16) + "</span>...";
                 return mixed;
             }
             
