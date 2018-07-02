@@ -66,8 +66,8 @@ test.from_number(0x04D2);   // Equivalent to 'test.from_number(1234)' or 'test.f
 .from_hex (mixed)
     mixed               - Array or String with or without separators
 ```
-[Number Conversion](blob/master/docs/number_conversion.html)    
-[Division and Modulo](blob/master/docs/div_mod.html)
+[Number Conversion](https://github.com/mentalmove/BigNumbers/blob/master/docs/number_conversion.html)    
+[Division and Modulo](https://github.com/mentalmove/BigNumbers/blob/master/docs/div_mod.html)
 &nbsp;  
 &nbsp;
 ```
@@ -85,7 +85,7 @@ test.from_decimal("1234");
 .from_base64 (string)
     string              - Base64 encoded string
 ```
-[Modulo-Exponentiation](blob/master/docs/mod_pow.html)
+[Modulo-Exponentiation](https://github.com/mentalmove/BigNumbers/blob/master/docs/mod_pow.html)
 
 &nbsp;
 
