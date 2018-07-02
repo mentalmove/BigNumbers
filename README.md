@@ -98,7 +98,7 @@ test.from_decimal("1234");
 ```
 &nbsp;
 ```
-// Generates a string, representing a hexadezimal number
+// Generates a string, representing a hexadecimal number
 // @return String
 .to_hex ()
 ```
