@@ -11,7 +11,7 @@ This library allows arithmetic operations with unsigned integer numbers of unlim
 
 An ArrayBuffer of a defined size is built and interpreted as optionally Uint8Array or Uint16Array.
 **These two classifications are not compatible.**
-Organisatoric steps are realised in a conventional way, while all operations that alter numbers
+Organisatoric steps are realised in a conventional way while all operations that alter numbers
 avoid `==`, `<`, `>`, `<=`, `>=`, `+`, `-`, `*`, `/`, `%` as well as methods of the _Math_ - library;
 for the sake of performance, binary operations are used instead.
 
