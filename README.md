@@ -27,6 +27,9 @@ BigNumbers cannot be altered in memory size.
 ```
 // Creates a new BigNumber
 // All values set to 0
+// @param byte_length Number
+// @param bytes_per_entry Number
+// @param src_typed_array Uint8Array or Uint16Array
 // @return BigNumber
 new BigNumber(byte_length[, bytes_per_entry[, src_typed_array]])
     byte_length         - Mandatory. Length, always measured in bytes,
@@ -40,6 +43,7 @@ new BigNumber(byte_length[, bytes_per_entry[, src_typed_array]])
 ```
 // Creates a (real) duplicate
 // Underlying ArrayBuffer is copied; dynamic properties are ignored
+// @param bytes Number
 // @return BigNumber
 .copy([bytes])
     bytes               - Optional. If provided and greater than original BigNumber's byte_length,
@@ -52,6 +56,7 @@ Technically, **XOR** is used; those who are not familiar with this operation sho
 only one assignment per BigNumber.
 
 ```
+// @param number Number
 .from_number (number)
     number              - Something that can be interpreted as unsigned integer number by javascript,
                             independent of its spelling.
@@ -63,6 +68,7 @@ test.from_number(0x04D2);   // Equivalent to 'test.from_number(1234)' or 'test.f
 ```
 &nbsp;
 ```
+// @param mixed Array or String
 .from_hex (mixed)
     mixed               - Array or String with or without separators
 ```
@@ -71,6 +77,7 @@ test.from_number(0x04D2);   // Equivalent to 'test.from_number(1234)' or 'test.f
 &nbsp;  
 &nbsp;
 ```
+// @param string String
 .from_decimal (string)
     string              - String representing an unsigned integer decimal number
 ```
@@ -82,6 +89,7 @@ test.from_decimal("1234");
 &nbsp;
 ```
 // Javascript's own encoding method btoa() should be used
+// @param string String
 .from_base64 (string)
     string              - Base64 encoded string
 ```
@@ -134,11 +142,13 @@ while `add()` returns a new _BigNumber_. Therefore, when using `increase_by()`, 
 a suitable size, or the result will be truncated; `add()` will always return a _BigNumber_ of correct byte length.
 ```
 // Increases one BigNumber by one (ore more) BigNumbers
+// @param argumentX BigNumber
 // @return void
 .increase_by (argument1[, argument2[, argument3[, ...]]])
 ```
 ```
 // Adds one (ore more) BigNumbers to a BigNumber
+// @param argumentX BigNumber
 // @return BigNumber
 .add (argument1[, argument2[, argument3[, ...]]])
 ```
@@ -150,11 +160,13 @@ a suitable size, or the result will be truncated; `add()` will always return a _
 while `subtract()` returns a new _BigNumber_. Results lower than zero will automatically default to zero.
 ```
 // Decreases one BigNumber by one (ore more) BigNumbers
+// @param argumentX BigNumber
 // @return void
 .decrease_by (argument1[, argument2[, argument3[, ...]]])
 ```
 ```
 // Subtracts one (ore more) BigNumbers from a BigNumber
+// @param argumentX BigNumber
 // @return BigNumber
 .subtract (argument1[, argument2[, argument3[, ...]]])
 ```
@@ -167,6 +179,7 @@ Should be used with only one argument.
 Result will always have the correct (i.e. increased) byte length.
 ```
 // Multiplicates the repective BigNumber with another BigNumber
+// @param multiplicator BigNumber
 // @return BigNumber
 .multiplicate (multiplicator[, FOR_INTERNAL_USAGE_ONLY])
 ```
@@ -178,6 +191,7 @@ Should be name 'divide_by()' from a semantic point of view but leaves the origin
 Used with one argument, result will always have the correct (i.e. decreased) byte length.
 ```
 // Divides the repective BigNumber by another BigNumber
+// @param divisor BigNumber
 // @return BigNumber
 .divide (divisor)
 ```
