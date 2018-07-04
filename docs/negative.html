@@ -205,13 +205,11 @@
                     
                     console.log( "<strong>" + first_sign + "large " + display_operators[i] + " " + second_sign + "small</strong>" );
                     result = arithmetics[i](first, second);
-                if ( result )
                     console.log( "<strong>" + display_number(first) + " " + display_operators[i] + " " + display_number(second) + " = " + display_number(result) + "</strong>" );
                     console.log( "" );
 
                     console.log( "<strong>" + second_sign + "small " + display_operators[i] + " " + first_sign + "large</strong>" );
                     result = arithmetics[i](second, first);
-                if ( result )
                     console.log( "<strong>" + display_number(second) + " " + display_operators[i] + " " + display_number(first) + " = " + display_number(result) + "</strong>" );
                     console.log( "" );
                 }
