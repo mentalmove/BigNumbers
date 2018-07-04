@@ -122,6 +122,7 @@ test.from_number( 1234 );
 var collection = test.to_collection();
 collection[0] /= 2;
 collection[1] += 43;
+console.log( test.to_number() );    // 765
 ```
 &nbsp;
 
