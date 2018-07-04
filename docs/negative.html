@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Negative Values</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberCompareExtended.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            function display_number (bignum) {
+                var to_return = (bignum.negative) ? "-" : "";
+                to_return += bignum.to_number();
+                return to_return;
+            }
+            
+            function a (first, second) {
+                var result, copied_first, copied_second;
+                if ( !first.negative == !second.negative ) {
+                    if ( !first.negative ) {
+                        result = first.add(second);
+                        console.log( display_number(first) + " + " + display_number(second) + " = " + display_number(result) );
+                        _log( result.to_collection() );
+                        return result;
+                    }
+                    copied_first = first.copy();
+                    copied_second = second.copy();
+                    console.log( display_number(first) + " + " + display_number(second) + " = -(" + display_number(copied_first) + " + " + display_number(copied_second) + ")" );
+                    result = a(copied_first, copied_second);
+                    result.negative = true;
+                    return result;
+                }
+                if ( first.negative ) {
+                    copied_first = first.copy();
+                    console.log( display_number(first) + " + " + display_number(second) + " = " + display_number(second) + " - " + display_number(copied_first) );
+                    result = s(second, copied_first);
+                    return result;
+                }
+                copied_second = second.copy();
+                console.log( display_number(first) + " + " + display_number(second) + " = " + display_number(first) + " - " + display_number(copied_second) );
+                result = s(first, copied_second);
+                return result;
+            }
+            function s (first, second) {
+                var result, copied_first, copied_second;
+                if ( !first.negative && !second.negative ) {
+                    var first_collection = first.to_collection();
+                    var second_collection = second.to_collection();
+                    var numeric_compared = first.compare(first_collection, second_collection);
+                    var compared = numeric_compared >= 0;
+                    console.log( "&nbsp;&nbsp;&nbsp;&nbsp;(" + display_number(first) + " >= " + display_number(second) + ") -> <strong>" + compared + "</strong>" );
+                    if ( compared ) {
+                        result = first.subtract(second);
+                        _log( result.to_collection() );
+                        return result;
+                    }
+                    console.log( display_number(first) + " - " + display_number(second) + " = -(" + display_number(second) + " - " + display_number(first) + ")" );
+                    result = s(second, first);
+                    result.negative = true;
+                    return result;
+                }
+                if ( first.negative && !second.negative ) {
+                    copied_first = first.copy();
+                    console.log( display_number(first) + " - " + display_number(second) + " = -(" + display_number(copied_first) + " + " + display_number(second) + ")" );
+                    result = a(copied_first, second);
+                    result.negative = true;
+                    return result;
+                }
+                if ( !first.negative && second.negative ) {
+                    copied_second = second.copy();
+                    console.log( display_number(first) + " - " + display_number(second) + " = " + display_number(first) + " + " + display_number(copied_second) );
+                    result = a(first, copied_second);
+                    return result;
+                }
+                copied_second = second.copy();
+                console.log( display_number(first) + " - " + display_number(second) + " = " + display_number(first) + " + " + display_number(copied_second) );
+                result = a(first, copied_second);
+                return result;
+            }
+            function m (first, second) {
+                var result, copied_first, copied_second;
+                if ( !first.negative == !second.negative ) {
+                    if ( first.negative ) {
+                        copied_first = first.copy();
+                        copied_second = second.copy();
+                        console.log( display_number(first) + " * " + display_number(second) + " = " + display_number(copied_first) + " * " + display_number(copied_second) );
+                        result = m(copied_first, copied_second);
+                        return result;
+                    }
+                    result = first.multiplicate(second);
+                    _log( result.to_collection() );
+                    return result;
+                }
+                if ( first.negative ) {
+                    copied_first = first.copy();
+                    console.log( display_number(first) + " * " + display_number(second) + " = -(" + display_number(copied_first) + " * " + display_number(second) + ")" );
+                    result = m(copied_first, second);
+                    result.negative = true;
+                    return result;
+                }
+                copied_second = second.copy();
+                console.log( display_number(first) + " * " + display_number(second) + " = -(" + display_number(first) + " * " + display_number(copied_second) + ")" );
+                result = m(first, copied_second);
+                result.negative = true;
+                return result;
+            }
+            function d (first, second) {
+                var result, copied_first, copied_second;
+                if ( !first.negative == !second.negative ) {
+                    if ( first.negative ) {
+                        copied_first = first.copy();
+                        copied_second = second.copy();
+                        console.log( display_number(first) + " / " + display_number(second) + " = " + display_number(copied_first) + " / " + display_number(copied_second) );
+                        result = d(copied_first, copied_second);
+                        return result;
+                    }
+                    result = first.divide(second, true);
+                    var remainder = result.modulo.copy();
+                    _log( {value: result.to_number(), remainder: remainder.to_collection().join(", ")} );
+                    var tenthousand = new BigNumber(2, 2);
+                    tenthousand.from_number(10000);
+                    var extended = remainder.multiplicate(tenthousand);
+                    var fractal = extended.divide(second);
+                    var to_return = {
+                        to_number: function () {
+                            return "" + result.to_number() + "." + fractal.to_number() + "...";
+                        }
+                    };
+                    return to_return;
+                }
+                if ( first.negative ) {
+                    copied_first = first.copy();
+                    console.log( display_number(first) + " / " + display_number(second) + " = -(" + display_number(copied_first) + " / " + display_number(second) + ")" );
+                    result = d(copied_first, second);
+                    result.negative = true;
+                    return result;
+                }
+                copied_second = second.copy();
+                console.log( display_number(first) + " / " + display_number(second) + " = -(" + display_number(first) + " / " + display_number(copied_second) + ")" );
+                result = d(first, copied_second);
+                result.negative = true;
+                return result;
+            }
+            var arithmetics = [a, s, m, d];
+            var display_operators = ["+", "-", "*", "/"];
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var first_basic = new BigNumber(8);
+            first_basic.from_decimal(  "67867867867867867" );
+            var second_basic = new BigNumber(8);
+            second_basic.from_decimal( "12323434545655522" );
+            
+            _log( first_basic.to_collection() );
+            _log( second_basic.to_collection() );
+            _log( "" );
+            
+            var first, second, result, j, first_sign, second_sign;
+            for ( var i = 0; i < arithmetics.length; i++ ) {
+                for ( j = 0; j < 4; j++ ) {
+                    first = first_basic.copy();
+                    second = second_basic.copy();
+                    first_sign = "";
+                    second_sign = "";
+                    if ( j % 2 ) {
+                        first.negative = true;
+                        first_sign = "-";
+                    }
+                    if ( j > 1 ) {
+                        second.negative = true;
+                        second_sign = "-";
+                    }
+                    
+                    console.log( "<strong>" + first_sign + "large " + display_operators[i] + " " + second_sign + "small</strong>" );
+                    result = arithmetics[i](first, second);
+                if ( result )
+                    console.log( "<strong>" + display_number(first) + " " + display_operators[i] + " " + display_number(second) + " = " + display_number(result) + "</strong>" );
+                    console.log( "" );
+
+                    console.log( "<strong>" + second_sign + "small " + display_operators[i] + " " + first_sign + "large</strong>" );
+                    result = arithmetics[i](second, first);
+                if ( result )
+                    console.log( "<strong>" + display_number(second) + " " + display_operators[i] + " " + display_number(first) + " = " + display_number(result) + "</strong>" );
+                    console.log( "" );
+                }
+                
+                console.log( "" );
+                _log( "" );
+            }
+                
+        </script>
+        
+    </body>
+</html>
