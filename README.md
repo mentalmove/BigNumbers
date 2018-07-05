@@ -13,7 +13,9 @@ An ArrayBuffer of a defined size is built and interpreted as optionally Uint8Arr
 **These two classifications are not compatible.**
 Organisatoric steps are realised in a conventional way while all operations that alter numbers
 avoid `==`, `<`, `>`, `<=`, `>=`, `+`, `-`, `*`, `/`, `%` as well as methods of the _Math_ - library;
-for the sake of performance, binary operations are used instead.
+for the sake of performance, binary operations (i.e. `!`, `~`, `|`, `^` and `&`) are used instead.
+It could be discussed if storage and logic should be separated; the decision pro an object oriented
+style was made in the hope the library could be easier expansible.
 
 &nbsp;
 
@@ -174,8 +176,8 @@ while `subtract()` returns a new _BigNumber_. Results lower than zero will autom
 &nbsp;  
 &nbsp;
 #### Multiplication
-Should be name 'multiplicate_by()' from a semantic point of view but leaves the original untouched.
-Should be used with only one argument.
+Should be named 'multiplicate_by()' from a semantic point of view but leaves the original untouched.
+Is intended to be used with only one argument.
 Result will always have the correct (i.e. increased) byte length.
 ```
 // Multiplicates the repective BigNumber with another BigNumber
@@ -187,7 +189,7 @@ Result will always have the correct (i.e. increased) byte length.
 &nbsp;  
 &nbsp;
 #### Division
-Should be name 'divide_by()' from a semantic point of view but leaves the original untouched.
+Should be named 'divide_by()' from a semantic point of view but leaves the original untouched.
 Used with one argument, result will always have the correct (i.e. decreased) byte length.
 ```
 // Divides the repective BigNumber by another BigNumber
