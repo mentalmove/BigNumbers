@@ -198,3 +198,79 @@ Used with one argument, result will always have the correct (i.e. decreased) byt
 .divide (divisor)
 ```
 [Example: Faculty (Division)](https://mentalmove.github.io/BigNumbers/division.html)
+&nbsp;  
+&nbsp;
+#### Modulo
+```
+// Division of a BigNumber by another BigNumber; only remainder is returned
+// @param divisor BigNumber
+// @return BigNumber
+.mod (divisor)
+```
+[Example: Fibonacci (Modulo)](https://mentalmove.github.io/BigNumbers/modulo.html)
+&nbsp;  
+&nbsp;
+#### Division and Modulo
+To obtain result and remainder of a division in one step, `divide()` has to be used
+with two arguments. Result will not be shortened but contain a property `modulo`.
+```
+// Divides the repective BigNumber by another BigNumber; remembers remainder
+// @param divisor BigNumber
+// @param do_not_reduce Boolean or anything that evaluates to 'true'
+// @return BigNumber
+//      containing property
+//      'modulo' BigNumber
+.divide (bignum, do_not_reduce)
+```
+```
+// Simple approximation to PI
+var dividend = new BigNumber(1, 1);
+dividend.from_number( 22 );
+var divisor = new BigNumber(1, 1);
+divisor.from_number( 7 );
+var result = dividend.divide(divisor, true);        // Two parameters
+var extend = new BigNumber(1, 1);
+extend.from_number( 100 );
+var extended_remainder = result.modulo.multiplicate(extend);
+var fractal = extended_remainder.divide(divisor);   // Only one parameter
+console.log( dividend.to_number() + " / " + divisor.to_number() + " = "
+    + result.to_number() + "." + fractal.to_number() );
+```
+[Example: Chinese remainder theorem (Division and Modulo)](https://mentalmove.github.io/BigNumbers/div_mod.html)
+&nbsp;  
+&nbsp;
+#### Square Root
+Should be used without arguments to leave the original untouched.
+```
+// @return BigNumber
+.sqrt ([FOR_INTERNAL_USAGE_ONLY])
+    FOR_INTERNAL_USAGE_ONLY - Not recommended
+```
+[Example: Golden ratio (Square root)](https://mentalmove.github.io/BigNumbers/sqrt.html)
+&nbsp;  
+&nbsp;
+#### Exponentiation
+Since exponents usually are small, the argument can optionally be
+an Unsigned Integer Javascript Number or a BigNumber.
+Result is possibly _really_ large.
+```
+// @param exp Number or BigNumber
+// @return BigNumber
+.pow (exp)
+    exp                 - Must be unsigned integer
+```
+[Example: Exponentiation](https://mentalmove.github.io/BigNumbers/exponentiation.html)
+&nbsp;  
+&nbsp;
+#### Modulo-Exponentiation
+Exponentiation and afterwards Modulo-Division, but with much lower effort.
+Widely used in cryptography.
+Both arguments can be optionally Numbers or BigNumbers.
+```
+// Result is never greater than (mod - 1)^2
+// @param exp Number or BigNumber
+// @param mod Number or BigNumber
+// @return BigNumber
+.mod_pow = (exp, mod)
+```
+[Example: RSA (Modulo-Exponentiation)](https://mentalmove.github.io/BigNumbers/mod_pow.html)
