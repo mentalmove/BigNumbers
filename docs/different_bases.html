@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Different number bases</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberDiffBaseExtended.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            function from_input () {
+                if ( !inputs.length ) {
+                    console.log( "" );
+                    console.log( "" );
+                    _log( "" );
+                    setTimeout(to_output, 41);
+                    return;
+                }
+                var single_input = inputs.shift();
+                var big_number = new BigNumber(single_input[2], 2);
+                big_number.from_distinct_base(single_input[0], single_input[1]);
+                
+                _log( big_number.to_collection() );
+                
+                var space = (single_input[1] < 10) ? "&nbsp;" : "";
+                
+                var comment = (single_input[3]) ? "[<i>" + single_input[3] + "</i>]" : "";
+                
+                console.log( single_input[0] + " [<i>base " + single_input[1] + "</i>] " + space + "<big>&#8793;</big> <strong>" + big_number.to_number() + "</strong> [<i>base 10</i>] " + comment );
+                
+                setTimeout(from_input, 17);
+            }
+            
+            var inputs = [];
+            var number_string, i, j, digit;
+            for ( i = 2; i <= 36; i++ ) {
+                number_string = "101101";
+                for ( j = 1; j <= 3; j++ ) {
+                    digit = Math.abs(i - j);
+                    if ( digit > 9 )
+                        digit = String.fromCharCode(digit + 55);
+                    number_string += digit;
+                }
+                number_string += "101101";
+                
+                j = i;
+                while ( j >= 2 )
+                    j /= 2;
+                var comment = (j == 1) ? "binary method" : "";
+                
+                inputs.push( [number_string, i, 10, comment] );
+            }
+            function to_output (base) {
+                if ( !base ) {
+                    console.log( "&nbsp; <big>[" + output_base_collection + "] </big> [<i><small>base 65536</small></i>]" );
+                    console.log( "" );
+                    _log( output_base_collection );
+                    to_output(2);
+                    return;
+                }
+                if ( base > 36 )
+                    return;
+                
+                j = base;
+                while ( j >= 2 )
+                    j /= 2;
+                var comment = (j == 1) ? "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><strong>to_binary(</strong>" + Math.log2(base) + "<strong>)</strong></i>" : "";
+                
+                console.log( "= <strong>" + output_base.to_distinct_base(base) + "</strong> [<i>base " + base + "</i>] " + comment );
+                
+                setTimeout(to_output, 17, (base + 1));
+            }
+            
+            inputs[0][3] += " <strong>from_base_2()</strong>";
+            inputs[14][3] += " <strong>.from_hex()</strong>";
+            inputs[30][3] += " <strong>from_base_32()</strong>";
+            
+            var output_base = new BigNumber(16, 2);
+            var output_base_collection = output_base.to_collection();
+            for ( i = 0; i < output_base_collection.length; i++ )
+                output_base_collection[i] = 100 + i;
+            
+        </script>
+        
+    </head>
+    <body onload="from_input()">
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+    </body>
+</html>
