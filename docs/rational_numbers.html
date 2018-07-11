@@ -119,10 +119,12 @@
             var i, j;
             var collection = [];
             
+            
+            
             var rational = new Rational(one, ten);
             collection.push( rational );
-            var s1 = "<strong>" + "1/10";
-            var s2 = rational.numerator.to_number() + "/" + rational.denominator.to_number();
+            var s1 = "<big><math>" + "<mfrac><mi>1</mi><mi>10</mi></mfrac>";
+            var s2 = "<math>" + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
             var s3 = rational.decimal(1);
             
             var readable = [ [1, "10"] ];
@@ -131,22 +133,23 @@
             var denominator = ten.copy();
             var tmp;
             for ( i = 2; i < 10; i++ ) {
-                s1 += " + " + i + "/1";
+                s1 += " + <mfrac><mi>" + i + "</mi><mi>1";
                 tmp = "1";
                 for ( j = 0; j < i; j++ ) {
                     s1 += "0";
                     tmp += "0";
                 }
+                s1 += "</mi></mfrac>";
                 readable.push( [i, tmp] );
                 numerator = numerator.add(one);
                 denominator = denominator.multiplicate(ten);
                 rational = new Rational(numerator.copy(), denominator.copy());
                 collection.push( rational );
-                s2 += " + " + rational.numerator.to_number() + "/" + rational.denominator.to_number();
+                s2 += " + " + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
                 s3 += " + " + rational.decimal(i);
             }
             
-            s1 += "</strong>";
+            s1 += "</math></big>";
             s2 += " = ";
             s3 += " = ";
             
@@ -161,18 +164,20 @@
             for ( i = 1; i < collection.length; i++ ) {
                 stored = new Rational(result.numerator.copy(), result.denominator.copy());
                 result = result.add(collection[i]);
-                printable = "&nbsp;&nbsp;&nbsp;&nbsp;" + stored.numerator.to_number() + "/" + stored.denominator.to_number() + " + " + readable[i][0] + "/" + readable[i][1] + " = ";
+                printable = "&nbsp;&nbsp;&nbsp;&nbsp;<math>" + "<mfrac><mi>" + stored.numerator.to_number() + "</mi><mi>" + stored.denominator.to_number() + "</mi></mfrac>" + " + " + "<mfrac><mi>" + readable[i][0] + "</mi><mi>" + readable[i][1] + "</mi></mfrac>" + " = ";
                 if ( readable[i][1] != collection[i].denominator.to_number() )
-                    printable += stored.numerator.to_number() + "/" + stored.denominator.to_number() + " + <strong>" + collection[i].numerator.to_number() + "/" + collection[i].denominator.to_number() + "</strong> = ";
-                printable += result.numerator.to_number() + "/" + result.denominator.to_number() + " = " + result.decimal(i + 1);
+                    printable += "<mfrac><mi>" + stored.numerator.to_number() + "</mi><mi>" + stored.denominator.to_number() + "</mi></mfrac>" + " + <strong>" + "<mfrac><mi>" + collection[i].numerator.to_number() + "</mi><mi>" + collection[i].denominator.to_number() + "</mi></mfrac>" + "</strong> = ";
+                printable += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>" + " = " + result.decimal(i + 1) + "</math>";
                 console.log( printable );
                 _log( result.numerator.to_collection() );
                 _log( result.denominator.to_collection() );
                 _log( "" );
             }
             
-            s2 += result.numerator.to_number() + "/" + result.denominator.to_number();
+            s2 += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>";
             s3 += result.decimal(9);
+            
+            s2 += "</math>";
             
             console.log( s2 );
             console.log( s3 );
@@ -185,8 +190,8 @@
             collection = [];
             rational = new Rational(one, one);
             collection.push( rational );
-            var s1 = "<strong>" + "1/1";
-            var s2 = rational.numerator.to_number() + "/" + rational.denominator.to_number();
+            var s1 = "<big><math>" + "<mfrac><mi>1</mi><mi>10</mi></mfrac>";
+            var s2 = "<math>" + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
             var s3 = rational.decimal();
             
             numerator = one.copy();
@@ -194,20 +199,21 @@
             var tmp_i;
             for ( i = 1; i < 9; i++ ) {
                 tmp_i = (i == 8) ? 9: i;
-                s1 += " - " + tmp_i + "/1";
+                s1 += " - <mfrac><mi>" + tmp_i + "</mi><mi>1";
                 for ( j = 0; j <= i; j++ )
                     s1 += "0";
+                s1 += "</mi></mfrac>";
                 if ( i == 8 )
                     numerator = numerator.add(one);
                 denominator = denominator.multiplicate(ten);
                 rational = new Rational(numerator.copy(), denominator.copy());
                 numerator = numerator.add(one);
                 collection.push( rational );
-                s2 += " - " + rational.numerator.to_number() + "/" + rational.denominator.to_number();
+                s2 += " - " + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
                 s3 += " - " + rational.decimal(tmp_i + 1);
             }
             
-            s1 += "</strong>";
+            s1 += "</math></big>";
             s2 += " = ";
             s3 += " = ";
             
@@ -218,16 +224,18 @@
                 _log( result.numerator.to_collection() );
                 _log( result.denominator.to_collection() );
                 _log( "" );
-                printable = "&nbsp;&nbsp;&nbsp;&nbsp;" + result.numerator.to_number() + "/" + result.denominator.to_number();
-                printable += " - " + collection[i].numerator.to_number() + "/" + collection[i].denominator.to_number() + " = ";
+                printable = "&nbsp;&nbsp;&nbsp;&nbsp;<math>" + "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>";
+                printable += " - " + "<mfrac><mi>" + collection[i].numerator.to_number() + "</mi><mi>" + collection[i].denominator.to_number() + "</mi></mfrac>" + " = ";
                 result = result.subtract(collection[i]);
-                printable += result.numerator.to_number() + "/" + result.denominator.to_number() + " = " + result.decimal(i + 1);
+                printable += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>" + " = " + result.decimal(i + 1) + "</math>";
                 
                 console.log( printable );
             }
             
-            s2 += result.numerator.to_number() + "/" + result.denominator.to_number();
+            s2 += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>";
             s3 += result.decimal(9);
+            
+            s2 += "</math>";
             
             console.log( s2 );
             console.log( s3 );
@@ -257,15 +265,17 @@
             var ab_div_cd = ab.divide(cd);
             var ab_div_dc = ab.divide(dc);
             
-            console.log( "(" + a.to_number() + " / " +  b.to_number()+ ") * (" + c.to_number() + " / " +  d.to_number() + ") = "
-                    + "(" + ab.numerator.to_number() + " / " +  ab.denominator.to_number() + ") * (" + cd.numerator.to_number() + " / " +  cd.denominator.to_number() + ") = "
-                    + ab_mul_cd.numerator.to_number() + " / " +  ab_mul_cd.denominator.to_number() + " &asymp; " + ab_mul_cd.decimal(50) + "..." );
-            console.log( "(" + a.to_number() + " / " +  b.to_number()+ ") / (" + c.to_number() + " / " +  d.to_number() + ") = "
-                    + "(" + ab.numerator.to_number() + " / " +  ab.denominator.to_number() + ") / (" + cd.numerator.to_number() + " / " +  cd.denominator.to_number() + ") = "
-                    + ab_div_cd.numerator.to_number() + " / " +  ab_div_cd.denominator.to_number() + " &asymp; " + ab_div_cd.decimal(50) + "..." );
-            console.log( "(" + a.to_number() + " / " +  b.to_number()+ ") / (" + d.to_number() + " / " +  c.to_number() + ") = "
-                    + "(" + ab.numerator.to_number() + " / " +  ab.denominator.to_number() + ") / (" + dc.numerator.to_number() + " / " +  dc.denominator.to_number() + ") = "
-                    + ab_div_dc.numerator.to_number() + " / " +  ab_div_dc.denominator.to_number() + " &asymp; " + ab_div_dc.decimal(50) + "..." );
+            //"<mfrac><mi>" + ab_mul_cd.numerator.to_number() + "</mi><mi>" + ab_mul_cd.denominator.to_number() + "</mi></mfrac>"
+            
+            console.log( "<math>" + "<mfrac><mi>" + a.to_number() + "</mi><mi>" + b.to_number() + "</mi></mfrac>" + " * " + "<mfrac><mi>" + c.to_number() + "</mi><mi>" + d.to_number() + "</mi></mfrac>" + " = "
+                    + "<mfrac><mi>" + ab.numerator.to_number() + "</mi><mi>" + ab.denominator.to_number() + "</mi></mfrac>" + " * " + "<mfrac><mi>" + cd.numerator.to_number() + "</mi><mi>" + cd.denominator.to_number() + "</mi></mfrac>" + " = "
+                    + "<mfrac><mi>" + ab_mul_cd.numerator.to_number() + "</mi><mi>" + ab_mul_cd.denominator.to_number() + "</mi></mfrac>" + "</math> &asymp; " + ab_mul_cd.decimal(50) + "..." );
+            console.log( "<math>" + "<mfrac><mi>" + a.to_number() + "</mi><mi>" + b.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + c.to_number() + "</mi><mi>" + d.to_number() + "</mi></mfrac>" + " = "
+                    + "<mfrac><mi>" + ab.numerator.to_number() + "</mi><mi>" + ab.denominator.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + cd.numerator.to_number() + "</mi><mi>" + cd.denominator.to_number() + "</mi></mfrac>" + " = "
+                    + "<mfrac><mi>" + ab_div_cd.numerator.to_number() + "</mi><mi>" + ab_div_cd.denominator.to_number() + "</mi></mfrac>" + "</math> &asymp; " + ab_div_cd.decimal(50) + "..." );
+            console.log( "<math>" + "<mfrac><mi>" + a.to_number() + "</mi><mi>" + b.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + d.to_number() + "</mi><mi>" + c.to_number() + "</mi></mfrac>" + " = "
+                    + "<mfrac><mi>" + ab.numerator.to_number() + "</mi><mi>" + ab.denominator.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + dc.numerator.to_number() + "</mi><mi>" + dc.denominator.to_number() + "</mi></mfrac>" + " = "
+                    + "<mfrac><mi>" + ab_div_dc.numerator.to_number() + "</mi><mi>" + ab_div_dc.denominator.to_number() + "</mi></mfrac>" + "</math> &asymp; " + ab_div_dc.decimal(50) + "..." );
             
             console.log( "" );
             console.log( "" );
@@ -273,6 +283,9 @@
             _log( "" );
             _log( "" );
             _log( "" );
+            
+            console.log( "<big><math><mfrac><mi>&pi;</mi><mi>4</mi></mfrac> = <mfrac><mi>1</mi><mi>2</mi></mfrac> * (1 + <mfrac><mi>1</mi><mi>1*3</mi></mfrac> + <mfrac><mi>1*2</mi><mi>1*3*5</mi></mfrac> + <mfrac><mi>1*2*3</mi><mi>1*3*5*7</mi></mfrac>+ <mfrac><mi>1*2*3*4</mi><mi>1*3*5*7*9</mi></mfrac> + ...)</math></big>" );
+            console.log( "" );
             
             var single_two = new BigNumber(1, 2);
             single_two.from_number(2);
