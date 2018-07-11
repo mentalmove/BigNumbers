@@ -21,12 +21,16 @@
             var _log = console.log;
             console.log = debug;
             
-            var PACKAGE = 10;
+            var PACKAGE = 20;
             var counter = 0;
+            var shift;
             function collatz () {
                 var collection = reference.to_collection();
-                if ( collection.length == 1 && !(collection[0] ^ 1) )
+                if ( collection.length == 1 && !(collection[0] ^ 1) ) {
+                    if ( iD("more_link") )
+                        iD("more_link").parentNode.removeChild(iD("more_link"));
                     return;
+                }
                 if ( collection[collection.length - 1] & 1 ) {
                     var even = false;
                     var msg = reference.to_number() + " * 3 + 1 = ";
@@ -35,9 +39,16 @@
                     msg += reference.to_number();
                 }
                 else {
+                    if ( !(collection[collection.length - 1]) )
+                        shift = (collection.length > 1) ? collection.BYTES_PER_ELEMENT * 8 : 1;
+                    else {
+                        shift = 1;
+                        while ( (collection[collection.length - 1] ^ 1) && !(collection[collection.length - 1] & (1 << shift)) )
+                            shift++;
+                    }
                     var even = true;
-                    var msg = "&nbsp;&nbsp;&nbsp;&nbsp;" + reference.to_number() + " >> 1 = ";
-                    reference.shift_by(-1);
+                    var msg = "&nbsp;&nbsp;&nbsp;&nbsp;" + reference.to_number() + " <strong>>> " + shift + "</strong> = ";
+                    reference.shift_by( 0 - shift );
                     msg += reference.to_number();
                 }
                 console.log( msg );
@@ -47,6 +58,7 @@
                 else {
                     if ( !(++counter % PACKAGE) ) {
                         counter = 0;
+                        PACKAGE++;
                         return;
                     }
                     if ( counter % 2 )
