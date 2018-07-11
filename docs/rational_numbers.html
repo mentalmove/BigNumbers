@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Shift left</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberMin.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            
+            function Rational (numerator, denominator) {
+                
+                function euclid (a, b) {
+                    var b_collection = b.to_collection();
+                    if ( b_collection.length == 1 && !b_collection[0] )
+                        return a;
+                    return euclid(b, a.mod(b));
+                }
+                
+                this.decimal = function (precision) {
+                    var integer_part = numerator.divide(denominator).to_number().toString();
+                    if ( is_integer )
+                        return integer_part;
+                    if ( !precision || isNaN(precision) )
+                        return integer_part;
+                    precision = parseInt(precision);
+                    if ( precision < 1 )
+                        return integer_part;
+                    
+                    var ten = new BigNumber(1, denominator.to_collection().BYTES_PER_ELEMENT);
+                    ten.from_number(10);
+                    var extend = ten.pow(precision);
+                    var tmp_numerator = mod.multiplicate(extend);
+                    var fractal = tmp_numerator.divide(denominator).to_number().toString();
+                    while ( fractal.length < precision )
+                        fractal = "0" + fractal;
+                    while ( fractal.length && fractal.substr(fractal.length - 1) == "0" )
+                        fractal = fractal.substr(0, fractal.length - 1);
+                    
+                    return integer_part + "." + fractal;
+                };
+                
+                this.add = function (rational) {
+                    var divisor = euclid(denominator, rational.denominator);
+                    var tmp1 = numerator.multiplicate( rational.denominator.divide(divisor) );
+                    var tmp2 = rational.numerator.multiplicate( denominator.divide(divisor) );
+                    var num = tmp1.add(tmp2);
+                    var den = denominator.multiplicate( rational.denominator.divide(divisor) );
+                    return new Rational(num, den);
+                };
+                this.subtract = function (rational) {
+                    var divisor = euclid(denominator, rational.denominator);
+                    var tmp1 = numerator.multiplicate( rational.denominator.divide(divisor) );
+                    var tmp2 = rational.numerator.multiplicate( denominator.divide(divisor) );
+                    var num = tmp1.subtract(tmp2);
+                    var den = denominator.multiplicate( rational.denominator.divide(divisor) );
+                    return new Rational(num, den);
+                };
+                this.multiplicate = function (rational) {
+                    return new Rational(numerator.multiplicate(rational.numerator), denominator.multiplicate(rational.denominator));
+                };
+                this.divide = function (rational) {
+                    return new Rational(numerator.multiplicate(rational.denominator), denominator.multiplicate(rational.numerator));
+                };
+                
+                var divisor = euclid(numerator, denominator);
+                var divisor_collection = divisor.to_collection();
+                if ( divisor_collection.length > 1 || divisor_collection[0] > 1 ) {
+                    numerator = numerator.divide(divisor);
+                    denominator = denominator.divide(divisor);
+                }
+                this.numerator = numerator;
+                this.denominator = denominator;
+                
+                var mod = numerator.mod(denominator);
+                var mod_collection = mod.to_collection();
+                var is_integer = (mod_collection.length == 1 && !mod_collection[0]);
+            }
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+            
+            var one = new BigNumber(1, 2);
+            one.from_number(1);
+            var ten = new BigNumber(1, 2);
+            ten.from_number(10);
+            var i, j;
+            var collection = [];
+            
+            var rational = new Rational(one, ten);
+            collection.push( rational );
+            var s1 = "<strong>" + "1/10";
+            var s2 = rational.numerator.to_number() + "/" + rational.denominator.to_number();
+            var s3 = rational.decimal(1);
+            
+            var readable = [ [1, "10"] ];
+            
+            var numerator = one.copy();
+            var denominator = ten.copy();
+            var tmp;
+            for ( i = 2; i < 10; i++ ) {
+                s1 += " + " + i + "/1";
+                tmp = "1";
+                for ( j = 0; j < i; j++ ) {
+                    s1 += "0";
+                    tmp += "0";
+                }
+                readable.push( [i, tmp] );
+                numerator = numerator.add(one);
+                denominator = denominator.multiplicate(ten);
+                rational = new Rational(numerator.copy(), denominator.copy());
+                collection.push( rational );
+                s2 += " + " + rational.numerator.to_number() + "/" + rational.denominator.to_number();
+                s3 += " + " + rational.decimal(i);
+            }
+            
+            s1 += "</strong>";
+            s2 += " = ";
+            s3 += " = ";
+            
+            console.log( s1 );
+            
+            var result = collection[0];
+            _log( result.numerator.to_collection() );
+            _log( result.denominator.to_collection() );
+            _log( "" );
+            var stored;
+            var printable;
+            for ( i = 1; i < collection.length; i++ ) {
+                stored = new Rational(result.numerator.copy(), result.denominator.copy());
+                result = result.add(collection[i]);
+                printable = "&nbsp;&nbsp;&nbsp;&nbsp;" + stored.numerator.to_number() + "/" + stored.denominator.to_number() + " + " + readable[i][0] + "/" + readable[i][1] + " = ";
+                if ( readable[i][1] != collection[i].denominator.to_number() )
+                    printable += stored.numerator.to_number() + "/" + stored.denominator.to_number() + " + <strong>" + collection[i].numerator.to_number() + "/" + collection[i].denominator.to_number() + "</strong> = ";
+                printable += result.numerator.to_number() + "/" + result.denominator.to_number() + " = " + result.decimal(i + 1);
+                console.log( printable );
+                _log( result.numerator.to_collection() );
+                _log( result.denominator.to_collection() );
+                _log( "" );
+            }
+            
+            s2 += result.numerator.to_number() + "/" + result.denominator.to_number();
+            s3 += result.decimal(9);
+            
+            console.log( s2 );
+            console.log( s3 );
+            
+            console.log( "" );
+            console.log( "" );
+            _log( "" );
+            _log( "" );
+            
+            collection = [];
+            rational = new Rational(one, one);
+            collection.push( rational );
+            var s1 = "<strong>" + "1/1";
+            var s2 = rational.numerator.to_number() + "/" + rational.denominator.to_number();
+            var s3 = rational.decimal();
+            
+            numerator = one.copy();
+            var denominator = ten.copy();
+            var tmp_i;
+            for ( i = 1; i < 9; i++ ) {
+                tmp_i = (i == 8) ? 9: i;
+                s1 += " - " + tmp_i + "/1";
+                for ( j = 0; j <= i; j++ )
+                    s1 += "0";
+                if ( i == 8 )
+                    numerator = numerator.add(one);
+                denominator = denominator.multiplicate(ten);
+                rational = new Rational(numerator.copy(), denominator.copy());
+                numerator = numerator.add(one);
+                collection.push( rational );
+                s2 += " - " + rational.numerator.to_number() + "/" + rational.denominator.to_number();
+                s3 += " - " + rational.decimal(tmp_i + 1);
+            }
+            
+            s1 += "</strong>";
+            s2 += " = ";
+            s3 += " = ";
+            
+            console.log( s1 );
+            
+            result = collection[0];
+            for ( i = 1; i < collection.length; i++ ) {
+                _log( result.numerator.to_collection() );
+                _log( result.denominator.to_collection() );
+                _log( "" );
+                printable = "&nbsp;&nbsp;&nbsp;&nbsp;" + result.numerator.to_number() + "/" + result.denominator.to_number();
+                printable += " - " + collection[i].numerator.to_number() + "/" + collection[i].denominator.to_number() + " = ";
+                result = result.subtract(collection[i]);
+                printable += result.numerator.to_number() + "/" + result.denominator.to_number() + " = " + result.decimal(i + 1);
+                
+                console.log( printable );
+            }
+            
+            s2 += result.numerator.to_number() + "/" + result.denominator.to_number();
+            s3 += result.decimal(9);
+            
+            console.log( s2 );
+            console.log( s3 );
+            
+            _log( result.numerator.to_collection() );
+            _log( result.denominator.to_collection() );
+            
+            console.log( "" );
+            console.log( "" );
+            console.log( "" );
+            _log( "" );
+            _log( "" );
+            _log( "" );
+            
+            var a = new BigNumber(1, 2);
+            var b = new BigNumber(1, 2);
+            var c = new BigNumber(1, 2);
+            var d = new BigNumber(1, 2);
+            a.from_number( 1234 );
+            b.from_number( 5678 );
+            c.from_number( 9876 );
+            d.from_number( 5432 );
+            var ab = new Rational(a, b);
+            var cd = new Rational(c, d);
+            var dc = new Rational(d, c);
+            var ab_mul_cd = ab.multiplicate(cd);
+            var ab_div_cd = ab.divide(cd);
+            var ab_div_dc = ab.divide(dc);
+            
+            console.log( "(" + a.to_number() + " / " +  b.to_number()+ ") * (" + c.to_number() + " / " +  d.to_number() + ") = "
+                    + "(" + ab.numerator.to_number() + " / " +  ab.denominator.to_number() + ") * (" + cd.numerator.to_number() + " / " +  cd.denominator.to_number() + ") = "
+                    + ab_mul_cd.numerator.to_number() + " / " +  ab_mul_cd.denominator.to_number() + " &asymp; " + ab_mul_cd.decimal(50) + "..." );
+            console.log( "(" + a.to_number() + " / " +  b.to_number()+ ") / (" + c.to_number() + " / " +  d.to_number() + ") = "
+                    + "(" + ab.numerator.to_number() + " / " +  ab.denominator.to_number() + ") / (" + cd.numerator.to_number() + " / " +  cd.denominator.to_number() + ") = "
+                    + ab_div_cd.numerator.to_number() + " / " +  ab_div_cd.denominator.to_number() + " &asymp; " + ab_div_cd.decimal(50) + "..." );
+            console.log( "(" + a.to_number() + " / " +  b.to_number()+ ") / (" + d.to_number() + " / " +  c.to_number() + ") = "
+                    + "(" + ab.numerator.to_number() + " / " +  ab.denominator.to_number() + ") / (" + dc.numerator.to_number() + " / " +  dc.denominator.to_number() + ") = "
+                    + ab_div_dc.numerator.to_number() + " / " +  ab_div_dc.denominator.to_number() + " &asymp; " + ab_div_dc.decimal(50) + "..." );
+            
+            console.log( "" );
+            console.log( "" );
+            console.log( "" );
+            _log( "" );
+            _log( "" );
+            _log( "" );
+            
+            var single_two = new BigNumber(1, 2);
+            single_two.from_number(2);
+            var two = new Rational(single_two.copy(), one.copy());
+            var half_pi = new Rational(one.copy(), one.copy());
+            var pi;
+            var msg = "&pi;/2 &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
+            msg += " => ";
+            pi = half_pi.multiplicate(two);
+            msg += "&pi; &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number() + " * 2 = " + pi.numerator.to_number() + "/" + pi.denominator.to_number();
+            msg += " &asymp; " + pi.decimal();
+            console.log( msg );
+            
+            var factor = new Rational(one.copy(), one.copy());
+            var tmp_factor;
+            var num, den;
+            var j;
+            var prec = 2;
+            var dec_pi, tmp_last_digit;
+            var last_digit = "?";
+            for ( i = 1; i < 26; i++ ) {
+                
+                num = new BigNumber(1, 2);
+                num.from_number(i);
+                den = new BigNumber(1, 2);
+                den.from_number(2 * i + 1);
+                tmp_factor = new Rational(num, den);
+                factor = factor.multiplicate(tmp_factor);
+                
+                msg = "<br>" + "(1";
+                for ( j = 2; j <= i; j++ )
+                    msg += "*" + j;
+                msg += ") / (1";
+                for ( j = 1; j <= i; j++ )
+                    msg += "*" + (2 * j + 1);
+                msg += ") = ";
+                msg += factor.numerator.to_number() + "/" + factor.denominator.to_number();
+                console.log( msg );
+                
+                msg = "&pi;/2 &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
+                msg += " + " + factor.numerator.to_number() + "/" + factor.denominator.to_number();
+                half_pi = half_pi.add(factor);
+                msg += " &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
+                msg += "<br>";
+                pi = half_pi.multiplicate(two);
+                msg += "&pi; &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number() + " * 2 &asymp; " + pi.numerator.to_number() + "/" + pi.denominator.to_number();
+                dec_pi = pi.decimal(prec);
+                while ( dec_pi.length < (prec + 2) )
+                    dec_pi += "0";
+                msg += " &asymp; " + dec_pi.substr(0, dec_pi.length - 2).replace(/\.$/, "");
+                if ( i == 25 )
+                    msg += "...";
+                console.log( msg );
+                tmp_last_digit = dec_pi.substr(dec_pi.length - 1);
+                if ( tmp_last_digit == last_digit )
+                    prec++;
+                last_digit = tmp_last_digit;
+            }
+            
+                
+        </script>
+        
+    </body>
+</html>
