@@ -282,7 +282,7 @@
             var msg = "&pi;/2 &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
             msg += " => ";
             pi = half_pi.multiplicate(two);
-            msg += "&pi; &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number() + " * 2 = " + pi.numerator.to_number() + "/" + pi.denominator.to_number();
+            msg += "&pi; &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number() + " * 2 &asymp; " + pi.numerator.to_number() + "/" + pi.denominator.to_number();
             msg += " &asymp; " + pi.decimal();
             console.log( msg );
             
