@@ -3,9 +3,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Big Numbers... Shift left</title>
+        <title>Big Numbers... Fractal Numbers</title>
         <link rel="stylesheet" type="text/css" href="styles.css">
         <script type="text/javascript" src="BigNumberMin.js"></script>
+        
         
         <script type="text/javascript">
             
@@ -21,6 +22,7 @@
             var _log = console.log;
             console.log = debug;
             
+            var ff = /firefox/i.test(navigator.userAgent);
             
             function Rational (numerator, denominator) {
                 
@@ -89,6 +91,19 @@
                 var mod = numerator.mod(denominator);
                 var mod_collection = mod.to_collection();
                 var is_integer = (mod_collection.length == 1 && !mod_collection[0]);
+                
+                this.rational = function (n, d) {
+                    n = n || numerator.to_number();
+                    d = d || denominator.to_number();
+                    if ( ff )
+                        return "<math><mfrac><mi>" + n + "</mi><mi>" + d + "</mi></mfrac></math>";
+                    n = "" + n;
+                    d = "" + d;
+                    var operators = /[+\-*\/^]/;
+                    n = (operators.test(n)) ? "(" + n + ")" : n;
+                    d = (operators.test(d)) ? "(" + d + ")" : d;
+                    return "<sup>" + n + "</sup>/<sub>" + d + "</sub>";
+                };
             }
             
         </script>
@@ -123,8 +138,8 @@
             
             var rational = new Rational(one, ten);
             collection.push( rational );
-            var s1 = "<big><math>" + "<mfrac><mi>1</mi><mi>10</mi></mfrac>";
-            var s2 = "<math>" + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
+            var s1 = "<big>" + rational.rational();
+            var s2 = rational.rational();
             var s3 = rational.decimal(1);
             
             var readable = [ [1, "10"] ];
@@ -133,23 +148,20 @@
             var denominator = ten.copy();
             var tmp;
             for ( i = 2; i < 10; i++ ) {
-                s1 += " + <mfrac><mi>" + i + "</mi><mi>1";
                 tmp = "1";
-                for ( j = 0; j < i; j++ ) {
-                    s1 += "0";
+                for ( j = 0; j < i; j++ )
                     tmp += "0";
-                }
-                s1 += "</mi></mfrac>";
+                s1 += " + " + rational.rational(i, tmp);
                 readable.push( [i, tmp] );
                 numerator = numerator.add(one);
                 denominator = denominator.multiplicate(ten);
                 rational = new Rational(numerator.copy(), denominator.copy());
                 collection.push( rational );
-                s2 += " + " + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
+                s2 += " + " + rational.rational();
                 s3 += " + " + rational.decimal(i);
             }
             
-            s1 += "</math></big>";
+            s1 += "</big>";
             s2 += " = ";
             s3 += " = ";
             
@@ -164,20 +176,18 @@
             for ( i = 1; i < collection.length; i++ ) {
                 stored = new Rational(result.numerator.copy(), result.denominator.copy());
                 result = result.add(collection[i]);
-                printable = "&nbsp;&nbsp;&nbsp;&nbsp;<math>" + "<mfrac><mi>" + stored.numerator.to_number() + "</mi><mi>" + stored.denominator.to_number() + "</mi></mfrac>" + " + " + "<mfrac><mi>" + readable[i][0] + "</mi><mi>" + readable[i][1] + "</mi></mfrac>" + " = ";
+                printable = "&nbsp;&nbsp;&nbsp;&nbsp;" + stored.rational() + " + " + rational.rational(readable[i][0], readable[i][1]) + " = ";
                 if ( readable[i][1] != collection[i].denominator.to_number() )
-                    printable += "<mfrac><mi>" + stored.numerator.to_number() + "</mi><mi>" + stored.denominator.to_number() + "</mi></mfrac>" + " + <strong>" + "<mfrac><mi>" + collection[i].numerator.to_number() + "</mi><mi>" + collection[i].denominator.to_number() + "</mi></mfrac>" + "</strong> = ";
-                printable += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>" + " = " + result.decimal(i + 1) + "</math>";
+                    printable += stored.rational() + " + <strong>" + collection[i].rational() + "</strong> = ";
+                printable += result.rational() + " = " + result.decimal(i + 1);
                 console.log( printable );
                 _log( result.numerator.to_collection() );
                 _log( result.denominator.to_collection() );
                 _log( "" );
             }
             
-            s2 += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>";
+            s2 += result.rational();
             s3 += result.decimal(9);
-            
-            s2 += "</math>";
             
             console.log( s2 );
             console.log( s3 );
@@ -190,8 +200,8 @@
             collection = [];
             rational = new Rational(one, one);
             collection.push( rational );
-            var s1 = "<big><math>" + "<mfrac><mi>1</mi><mi>10</mi></mfrac>";
-            var s2 = "<math>" + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
+            var s1 = "<big>" + rational.rational();
+            var s2 = rational.rational();
             var s3 = rational.decimal();
             
             numerator = one.copy();
@@ -199,21 +209,21 @@
             var tmp_i;
             for ( i = 1; i < 9; i++ ) {
                 tmp_i = (i == 8) ? 9: i;
-                s1 += " - <mfrac><mi>" + tmp_i + "</mi><mi>1";
+                tmp = "1";
                 for ( j = 0; j <= i; j++ )
-                    s1 += "0";
-                s1 += "</mi></mfrac>";
+                    tmp += "0";
+                s1 += " - " + rational.rational(tmp_i, tmp);
                 if ( i == 8 )
                     numerator = numerator.add(one);
                 denominator = denominator.multiplicate(ten);
                 rational = new Rational(numerator.copy(), denominator.copy());
                 numerator = numerator.add(one);
                 collection.push( rational );
-                s2 += " - " + "<mfrac><mi>" + rational.numerator.to_number() + "</mi><mi>" + rational.denominator.to_number() + "</mi></mfrac>";
+                s2 += " - " + rational.rational();
                 s3 += " - " + rational.decimal(tmp_i + 1);
             }
             
-            s1 += "</math></big>";
+            s1 += "</big>";
             s2 += " = ";
             s3 += " = ";
             
@@ -224,18 +234,16 @@
                 _log( result.numerator.to_collection() );
                 _log( result.denominator.to_collection() );
                 _log( "" );
-                printable = "&nbsp;&nbsp;&nbsp;&nbsp;<math>" + "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>";
-                printable += " - " + "<mfrac><mi>" + collection[i].numerator.to_number() + "</mi><mi>" + collection[i].denominator.to_number() + "</mi></mfrac>" + " = ";
+                printable = "&nbsp;&nbsp;&nbsp;&nbsp;" + result.rational();
+                printable += " - " + collection[i].rational() + " = ";
                 result = result.subtract(collection[i]);
-                printable += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>" + " = " + result.decimal(i + 1) + "</math>";
+                printable += result.rational() + " = " + result.decimal(i + 1);
                 
                 console.log( printable );
             }
             
-            s2 += "<mfrac><mi>" + result.numerator.to_number() + "</mi><mi>" + result.denominator.to_number() + "</mi></mfrac>";
+            s2 += result.rational();
             s3 += result.decimal(9);
-            
-            s2 += "</math>";
             
             console.log( s2 );
             console.log( s3 );
@@ -249,6 +257,7 @@
             _log( "" );
             _log( "" );
             _log( "" );
+            
             
             var a = new BigNumber(1, 2);
             var b = new BigNumber(1, 2);
@@ -265,17 +274,15 @@
             var ab_div_cd = ab.divide(cd);
             var ab_div_dc = ab.divide(dc);
             
-            //"<mfrac><mi>" + ab_mul_cd.numerator.to_number() + "</mi><mi>" + ab_mul_cd.denominator.to_number() + "</mi></mfrac>"
-            
-            console.log( "<math>" + "<mfrac><mi>" + a.to_number() + "</mi><mi>" + b.to_number() + "</mi></mfrac>" + " * " + "<mfrac><mi>" + c.to_number() + "</mi><mi>" + d.to_number() + "</mi></mfrac>" + " = "
-                    + "<mfrac><mi>" + ab.numerator.to_number() + "</mi><mi>" + ab.denominator.to_number() + "</mi></mfrac>" + " * " + "<mfrac><mi>" + cd.numerator.to_number() + "</mi><mi>" + cd.denominator.to_number() + "</mi></mfrac>" + " = "
-                    + "<mfrac><mi>" + ab_mul_cd.numerator.to_number() + "</mi><mi>" + ab_mul_cd.denominator.to_number() + "</mi></mfrac>" + "</math> &asymp; " + ab_mul_cd.decimal(50) + "..." );
-            console.log( "<math>" + "<mfrac><mi>" + a.to_number() + "</mi><mi>" + b.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + c.to_number() + "</mi><mi>" + d.to_number() + "</mi></mfrac>" + " = "
-                    + "<mfrac><mi>" + ab.numerator.to_number() + "</mi><mi>" + ab.denominator.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + cd.numerator.to_number() + "</mi><mi>" + cd.denominator.to_number() + "</mi></mfrac>" + " = "
-                    + "<mfrac><mi>" + ab_div_cd.numerator.to_number() + "</mi><mi>" + ab_div_cd.denominator.to_number() + "</mi></mfrac>" + "</math> &asymp; " + ab_div_cd.decimal(50) + "..." );
-            console.log( "<math>" + "<mfrac><mi>" + a.to_number() + "</mi><mi>" + b.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + d.to_number() + "</mi><mi>" + c.to_number() + "</mi></mfrac>" + " = "
-                    + "<mfrac><mi>" + ab.numerator.to_number() + "</mi><mi>" + ab.denominator.to_number() + "</mi></mfrac>" + " / " + "<mfrac><mi>" + dc.numerator.to_number() + "</mi><mi>" + dc.denominator.to_number() + "</mi></mfrac>" + " = "
-                    + "<mfrac><mi>" + ab_div_dc.numerator.to_number() + "</mi><mi>" + ab_div_dc.denominator.to_number() + "</mi></mfrac>" + "</math> &asymp; " + ab_div_dc.decimal(50) + "..." );
+            console.log( rational.rational(a.to_number(), b.to_number()) + " * " + rational.rational(c.to_number(), d.to_number()) + " = "
+                    + ab.rational() + " * " + cd.rational() + " = "
+                    + ab_mul_cd.rational() + " &asymp; " + ab_mul_cd.decimal(50) + "..." );
+            console.log( rational.rational(a.to_number(), b.to_number()) + " / " + rational.rational(c.to_number(), d.to_number()) + " = "
+                    + ab.rational() + " / " + cd.rational() + " = "
+                    + ab_div_cd.rational() + " &asymp; " + ab_div_cd.decimal(50) + "..." );
+            console.log( rational.rational(a.to_number(), b.to_number()) + " / " + rational.rational(d.to_number(), c.to_number()) + " = "
+                    + ab.rational() + " / " + dc.rational() + " = "
+                    + ab_div_dc.rational() + " &asymp; " + ab_div_dc.decimal(50) + "..." );
             
             console.log( "" );
             console.log( "" );
@@ -284,7 +291,14 @@
             _log( "" );
             _log( "" );
             
-            console.log( "<big><math><mfrac><mi>&pi;</mi><mi>4</mi></mfrac> = <mfrac><mi>1</mi><mi>2</mi></mfrac> * (1 + <mfrac><mi>1</mi><mi>1*3</mi></mfrac> + <mfrac><mi>1*2</mi><mi>1*3*5</mi></mfrac> + <mfrac><mi>1*2*3</mi><mi>1*3*5*7</mi></mfrac>+ <mfrac><mi>1*2*3*4</mi><mi>1*3*5*7*9</mi></mfrac> + ...)</math></big>" );
+            
+            console.log( "For a more efficient method, see <a href='number_conversion.html'>Hex PI calculation</a> - Page" );
+            console.log( "" );
+            console.log( "<big>" + rational.rational("&pi;", 4) + " = " + rational.rational(1, 2) + " * (1 + "
+                    + rational.rational(1, "1*3")
+                    + " + " + rational.rational("1*2", "1*3*5")
+                    + " + " + rational.rational("1*2*3", "1*3*5*7")
+                    + " + " + rational.rational("1*2*3*4", "1*3*5*7*9") + " + ...)</big>" );
             console.log( "" );
             
             var single_two = new BigNumber(1, 2);
@@ -292,10 +306,10 @@
             var two = new Rational(single_two.copy(), one.copy());
             var half_pi = new Rational(one.copy(), one.copy());
             var pi;
-            var msg = "&pi;/2 &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
+            var msg = rational.rational("&pi;", 2) + " &asymp; " + half_pi.rational();
             msg += " => ";
             pi = half_pi.multiplicate(two);
-            msg += "&pi; &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number() + " * 2 &asymp; " + pi.numerator.to_number() + "/" + pi.denominator.to_number();
+            msg += "&pi; &asymp; " + half_pi.rational() + " * 2 &asymp; " + pi.rational();
             msg += " &asymp; " + pi.decimal();
             console.log( msg );
             
@@ -304,7 +318,7 @@
             var num, den;
             var j;
             var prec = 2;
-            var dec_pi, tmp_last_digit;
+            var dec_pi, tmp_last_digit, nn, dd;
             var last_digit = "?";
             for ( i = 1; i < 26; i++ ) {
                 
@@ -315,23 +329,22 @@
                 tmp_factor = new Rational(num, den);
                 factor = factor.multiplicate(tmp_factor);
                 
-                msg = "<br>" + "(1";
+                nn = "1";
                 for ( j = 2; j <= i; j++ )
-                    msg += "*" + j;
-                msg += ") / (1";
+                    nn += "*" + j;
+                dd = "1";
                 for ( j = 1; j <= i; j++ )
-                    msg += "*" + (2 * j + 1);
-                msg += ") = ";
-                msg += factor.numerator.to_number() + "/" + factor.denominator.to_number();
+                    dd += "*" + (2 * j + 1);
+                msg = "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + rational.rational(nn, dd) + " = " + factor.rational();
                 console.log( msg );
                 
-                msg = "&pi;/2 &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
-                msg += " + " + factor.numerator.to_number() + "/" + factor.denominator.to_number();
+                msg = rational.rational("&pi;", 2) + " &asymp; " + half_pi.rational();
+                msg += " + " + factor.rational();
                 half_pi = half_pi.add(factor);
-                msg += " &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number();
+                msg += " &asymp; " + half_pi.rational();
                 msg += "<br>";
                 pi = half_pi.multiplicate(two);
-                msg += "&pi; &asymp; " + half_pi.numerator.to_number() + "/" + half_pi.denominator.to_number() + " * 2 &asymp; " + pi.numerator.to_number() + "/" + pi.denominator.to_number();
+                msg += "&pi; &asymp; " + half_pi.rational() + " * 2 &asymp; " + pi.rational();
                 dec_pi = pi.decimal(prec);
                 while ( dec_pi.length < (prec + 2) )
                     dec_pi += "0";
