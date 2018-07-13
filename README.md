@@ -54,8 +54,9 @@ new BigNumber(byte_length[, bytes_per_entry[, src_typed_array]])
 &nbsp;
 
 ### Assigning values
-Technically, **XOR** is used; those who are not familiar with this operation should do
-only one assignment per BigNumber.
+Technically, **Binary OR** is used; those who are not familiar with this operation should do
+only one assignment per BigNumber. **Existing values cannot be cleared by writing**
+`repective_big_number.from_number(0)`**.**
 
 ```
 // @param number Number
@@ -138,6 +139,19 @@ console.log( test.to_number() ); // 765
 
 ### Operations
 
+#### Bit shift
+Moves all bits to left (positive argument) or right (negative argument).
+Alters the original value; the original number therefore should have a suitable size.
+```
+// @param bit Number
+// @return void
+.shift_by (bit)
+    bit                 - Positive or negative integer number
+```
+[Example: All bits (Shift left)](https://mentalmove.github.io/BigNumbers/shift_left.html)  
+[Example: Collatz (Shift right)](https://mentalmove.github.io/BigNumbers/shift_right.html)
+&nbsp;  
+&nbsp;
 #### Addition
 `increase_by()` and `add()`work almost identical; the difference is that `increase_by()` alters the original value
 while `add()` returns a new _BigNumber_. Therefore, when using `increase_by()`, the original number must have
