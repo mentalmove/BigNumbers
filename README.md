@@ -271,6 +271,55 @@ Both arguments can be optionally Numbers or BigNumbers.
 // @param exp Number or BigNumber
 // @param mod Number or BigNumber
 // @return BigNumber
-.mod_pow = (exp, mod)
+.mod_pow (exp, mod)
 ```
 [Example: RSA (Modulo-Exponentiation)](https://mentalmove.github.io/BigNumbers/mod_pow.html)
+
+&nbsp;
+
+## Suggestions for extensions
+
+### Negative Values
+Negative numbers do not differ much of positive (or unsigned) numbers. Since BigNumbers
+are objetcs, a user-defined property (e.g. `negative`) can be assigned. Calculations
+can easily be done when the following rules are respected:
+```
+a + -b = a - b
+-a + b = b - a
+-a + -b = -(a + b)
+
+a - -b = a + b
+-a - b = -(a + b)
+-a - -b = -a + b = b - a
+
+a * -b = -(a * b)
+-a * b = -(a * b)
+-a * -b = a * b
+
+a / -b = -(a / b)
+-a / b = -(a / b)
+-a / -b = a / b
+```
+The only possible problem is caused by `a - b` in case `b` is greater than `a`. This leads to two possible solutions
+to circumvent the problem:
+- It it always known if `a >= b` or not. An example would be the _Extended Euclidian Algorithm_:
+```
+// Simple Javascript; assuming numbers are small
+function extended_euclid (a, b) {
+    if ( !b )
+        return [a, 1, 0];
+    var x = extended_euclid(b, a % b);
+    return [ x[0], x[2], x[1] - x[2] * parseInt(a / b) ];
+}
+```
+If initially `a` and `b` are positive and `a > b` (what should be the case for reasonable results),
+it is always known if the return values are greater than 0 or not.
+[_Extended Euclidian Algorithm_ in **Chinese remainder theorem**](https://github.com/mentalmove/BigNumbers/blob/master/docs/div_mod.html)
+- `a` and `b` have to be compared. Since the _BigNumber_ - library already has a compare function,
+it only has to be set publicly available, e.g. by writing
+```
+this.compare = compare;
+```
+inside `function BigNumber() { /* ... */ }`.
+
+[Example: Negative values](https://mentalmove.github.io/BigNumbers/negative.html)
