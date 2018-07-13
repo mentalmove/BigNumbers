@@ -435,3 +435,116 @@ if the respective bases have other prime factors than two or not. Number bases `
 but that would require a consistent mapping between numbers and symbols.
 
 [Example: Different number bases](https://mentalmove.github.io/BigNumbers/different_bases.html)
+
+&nbsp;
+
+### Binary Operations
+
+#### Set single bit
+```js
+// Adds a two potency by setting a single bit to 1
+// If already set, tries the next
+this.set_bit = set_bit;
+```
+```js
+var num1 = new BigNumber(2, 1);
+num1.from_number(996);
+num1.set_bit(3);                    // Efficient because relevant bit is 0
+console.log( num1.to_number() );
+
+var num2 = new BigNumber(2, 1);
+num2.from_number(1023);
+num2.set_bit(1);                    // Not efficient because num2 is odd; needs 10 steps
+console.log( num2.to_number() );
+```
+
+#### Unset single bit
+```js
+// Subtracts a two potency by setting a single bit to 0
+// If already unset, tries the next
+this.unset_bit = unset_bit;
+```
+```js
+var num1 = new BigNumber(3, 1);
+num1.from_number(65537);
+num1.unset_bit(1);                  // Efficient
+console.log( num1.to_number() );
+
+var num2 = new BigNumber(3, 1);
+num2.from_number(65536);
+num2.unset_bit(1);                  // Not efficient
+console.log( num2.to_number() );
+```
+
+#### Toggle all bits
+```js
+// Reversable by repeating
+this.negate = function () {
+    for ( var i = 0; i < typed_array.length; i++ )
+        typed_array[i] = (~typed_array[i]) & MAX_VALUE;
+};
+```
+```js
+var num = new BigNumber(4, 1);
+num.from_number(3060399405);
+num.negate();
+console.log( num.to_number() );     // 1234567890
+```
+
+#### Two's complement
+In computer science usually used to toggle the sign. **Not recommended for** _BigNumbers_**.**
+```js
+// Reversable by repeating
+this.twos_complement = function () {
+    for ( var i = 0; i < typed_array.length; i++ )
+        typed_array[i] = (~typed_array[i]) & MAX_VALUE;
+    set_bit(1);
+};
+```
+```js
+var A = new BigNumber(3, 1);
+A.from_number(15777216);
+console.log( A.to_number() );       // 15777216
+A.twos_complement();
+console.log( A.to_number() );       // 1000000
+A.twos_complement();
+console.log( A.to_number() );       // 15777216
+
+// Please compare:
+var a = 15777216;
+console.log( a );                   // 15777216
+a = ~a;
+a++;
+console.log( a );                   // -15777216
+a = ~a;
+a++;
+console.log( a );                   // 15777216
+```
+
+#### OR
+```js
+this.or = function (bignum) {
+    var bignum_collection = bignum.to_collection();
+    var length = Math.max(bignum_collection.length, typed_array.length);
+    var result = myself.copy(length);
+    var result_collection = result.to_collection();
+    for ( var i = 0; i < length; i++ ) {
+        if ( i < bignum_collection.length && i < typed_array.length )
+            result_collection[length - i - 1] = bignum_collection[bignum_collection.length - i - 1] | typed_array[typed_array.length - i - 1];
+        else {
+            if ( length == typed_array.length )
+                break;
+            result_collection[length - i - 1] = bignum_collection[bignum_collection.length - i - 1];
+        }
+    }
+    return reduce(result);
+};
+```
+```js
+var num1 = new BigNumber(2, 1);
+num1.from_number(645);
+var num2 = new BigNumber(2, 1);
+num2.from_number(358);
+console.log( num1.to_number() + " OR " + num2.to_number() + " = " + num1.or(num2).to_number() );    // 999
+console.log( num1.to_number() + " + " + num2.to_number() + " = " + num1.add(num2).to_number() );    // 1003
+```
