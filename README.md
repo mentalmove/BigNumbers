@@ -315,7 +315,7 @@ function extended_euclid (a, b) {
 If initially `a` and `b` are positive and `a > b` (what should be the case for reasonable results),
 it is always known if the return values are greater than 0 or not.
 [_Extended Euclidian Algorithm_ in **Chinese remainder theorem**](https://github.com/mentalmove/BigNumbers/blob/master/docs/div_mod.html)
-- `a` and `b` have to be compared. Since the _BigNumber_ - library already has a compare function,
+- `a` and `b` have to be compared to know if `a - b` or `-(b - a)` is preferable. Since the _BigNumber_ - library already has a compare function,
 it only has to be set publicly available, e.g. by writing
 ```
 this.compare = compare;
