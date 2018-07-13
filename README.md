@@ -291,6 +291,91 @@ Both arguments can be optionally Numbers or BigNumbers.
 
 &nbsp;
 
+### Real numbers
+In computer science, non-integer numbers usually are realised as base-mantissa-exponent - combination.
+This is extremely fast and more or less reliable for fixed memory sizes what stands in contrast to
+the idea behind _BigNumbers_. Floating point numbers of variable size (i.e. integer part left of the point,
+fractal part right of the point) can be realised using strings; this is an easy approach for humans,
+but unfortunately slow.     
+A third method would be pairs of numbers or BigNumbers; this can be done without touching the library, i.e.
+```js
+// @param numerator BigNumber
+// @param denominator BigNumber
+// numerator and denominator must have the same bytes_per_entry
+function Rational (numerator, denominator) {
+
+    function euclid (a, b) {
+        var b_collection = b.to_collection();
+        if ( b_collection.length == 1 && !b_collection[0] )
+            return a;
+        return euclid(b, a.mod(b));
+    }
+
+    this.decimal = function (precision) {
+        var integer_part = numerator.divide(denominator).to_number().toString();
+        if ( is_integer )
+            return integer_part;
+        if ( !precision || isNaN(precision) )
+            return integer_part;
+        precision = parseInt(precision);
+        if ( precision < 1 )
+            return integer_part;
+
+        var ten = new BigNumber(1, denominator.to_collection().BYTES_PER_ELEMENT);
+        ten.from_number(10);
+        var extend = ten.pow(precision);
+        var tmp_numerator = mod.multiplicate(extend);
+        var fractal = tmp_numerator.divide(denominator).to_number().toString();
+        while ( fractal.length < precision )
+            fractal = "0" + fractal;
+        while ( fractal.length && fractal.substr(fractal.length - 1) == "0" )
+            fractal = fractal.substr(0, fractal.length - 1);
+
+        return integer_part + "." + fractal;
+    };
+
+    this.add = function (rational) {
+        var divisor = euclid(denominator, rational.denominator);
+        var tmp1 = numerator.multiplicate( rational.denominator.divide(divisor) );
+        var tmp2 = rational.numerator.multiplicate( denominator.divide(divisor) );
+        var num = tmp1.add(tmp2);
+        var den = denominator.multiplicate( rational.denominator.divide(divisor) );
+        return new Rational(num, den);
+    };
+    this.subtract = function (rational) {
+        var divisor = euclid(denominator, rational.denominator);
+        var tmp1 = numerator.multiplicate( rational.denominator.divide(divisor) );
+        var tmp2 = rational.numerator.multiplicate( denominator.divide(divisor) );
+        var num = tmp1.subtract(tmp2);
+        var den = denominator.multiplicate( rational.denominator.divide(divisor) );
+        return new Rational(num, den);
+    };
+    this.multiplicate = function (rational) {
+        return new Rational(numerator.multiplicate(rational.numerator), denominator.multiplicate(rational.denominator));
+    };
+    this.divide = function (rational) {
+        return new Rational(numerator.multiplicate(rational.denominator), denominator.multiplicate(rational.numerator));
+    };
+
+    var divisor = euclid(numerator, denominator);
+    var divisor_collection = divisor.to_collection();
+    if ( divisor_collection.length > 1 || divisor_collection[0] > 1 ) {
+        numerator = numerator.divide(divisor);
+        denominator = denominator.divide(divisor);
+    }
+    this.numerator = numerator;
+    this.denominator = denominator;
+
+    var mod = numerator.mod(denominator);
+    var mod_collection = mod.to_collection();
+    var is_integer = (mod_collection.length == 1 && !mod_collection[0]);
+}
+```
+To keep it readable, the above function is not performance optimised.     
+[Example: Rational Numbers](https://mentalmove.github.io/BigNumbers/rational_numbers.html)
+
+&nbsp;
+
 ## Suggestions for extensions
 
 ### Negative Values
