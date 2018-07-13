@@ -284,11 +284,10 @@
                     + ab.rational() + " / " + dc.rational() + " = "
                     + ab_div_dc.rational() + " &asymp; " + ab_div_dc.decimal(50) + "..." );
             
+            
             console.log( "" );
             console.log( "" );
             console.log( "" );
-            _log( "" );
-            _log( "" );
             _log( "" );
             
             
@@ -318,7 +317,7 @@
             var num, den;
             var j;
             var prec = 2;
-            var dec_pi, tmp_last_digit, nn, dd;
+            var dec_pi, tmp_last_digit, nn, nns, dd, dds, remember;
             var last_digit = "?";
             for ( i = 1; i < 26; i++ ) {
                 
@@ -327,15 +326,36 @@
                 den = new BigNumber(1, 2);
                 den.from_number(2 * i + 1);
                 tmp_factor = new Rational(num, den);
+                remember = factor.rational() + " * " + tmp_factor.rational();
                 factor = factor.multiplicate(tmp_factor);
                 
                 nn = "1";
-                for ( j = 2; j <= i; j++ )
+                nns = (i == 1) ? "1" : "";
+                for ( j = 2; j <= i; j++ ) {
                     nn += "*" + j;
+                    if ( (j % 2) )
+                        continue;
+                    if ( nns )
+                        nns += "*";
+                    nns += "" + j;
+                }
                 dd = "1";
-                for ( j = 1; j <= i; j++ )
+                dds = "";
+                for ( j = 1; j <= i; j++ ) {
                     dd += "*" + (2 * j + 1);
-                msg = "<br>&nbsp;&nbsp;&nbsp;&nbsp;" + rational.rational(nn, dd) + " = " + factor.rational();
+                    if ( (2 * j + 1) <= i )
+                        continue;
+                    if ( dds )
+                        dds += "*";
+                    dds += "" + (2 * j + 1);
+                }
+                msg = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
+                msg += remember + " = ";
+                if ( i <= 14 )
+                    msg += rational.rational(nn, dd) + " = ";
+                if ( i >= 12 )
+                    msg += rational.rational(nns, dds) + " = ";
+                msg += factor.rational();
                 console.log( msg );
                 
                 msg = rational.rational("&pi;", 2) + " &asymp; " + half_pi.rational();
@@ -356,6 +376,10 @@
                 if ( tmp_last_digit == last_digit )
                     prec++;
                 last_digit = tmp_last_digit;
+                
+                _log( "" );
+                _log( pi.numerator.to_collection() );
+                _log( pi.denominator.to_collection() );
             }
             
                 
