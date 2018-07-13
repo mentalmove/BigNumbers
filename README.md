@@ -83,7 +83,7 @@ test.from_number(0x04D2);   // Equivalent to 'test.from_number(1234)' or 'test.f
 .from_decimal (string)
     string              - String representing an unsigned integer decimal number
 ```
-```
+```js
 // Builds a BigNumber with value 1234
 var test = new BigNumber(2, 2); // bytes_per_entry does not matter as long as only one BigNumber is used
 test.from_decimal("1234");
