@@ -413,7 +413,7 @@ function extended_euclid (a, b) {
 ```
 If initially `a` and `b` are positive and `a > b` (what should be the case for reasonable results),
 it is always known if the return values are greater than 0 or not.
-[*slow_chinese_euclid()* in **Chinese remainder theorem**](https://github.com/mentalmove/BigNumbers/blob/master/docs/div_mod.html)
+See [*slow_chinese_euclid()* in **Chinese remainder theorem**](https://github.com/mentalmove/BigNumbers/blob/master/docs/div_mod.html)
 - `a` and `b` have to be compared to know if `a - b` or `-(b - a)` is preferable. Since the _BigNumber_ - library already has a compare function,
 it only has to be set publicly available, e.g. by writing
 ```js
@@ -422,3 +422,16 @@ this.compare = compare;
 inside `function BigNumber() { /* ... */ }`.
 
 [Example: Negative values](https://mentalmove.github.io/BigNumbers/negative.html)
+
+&nbsp;
+
+### Different Number Bases
+The library already includes conversions between number systems based on `10` and the most common two potencies
+`16` and `64` (and, of cause, its own number system `256` or `65536`). This can be used to convert between these
+systems, e.g. for [converting hexadecimal PI to decimal PI](https://mentalmove.github.io/BigNumbers/number_conversion.html).     
+The underlying methods can be extended for other bases. Internally, computers know only two types
+of integer numbers: _Potencies of two_ and all the others. Therefore, a [possibly extended library](https://github.com/mentalmove/BigNumbers/blob/master/docs/BigNumberDiffBaseExtended.js) should act differently
+if the respective bases have other prime factors than two or not. Number bases `> 36`would also be possible,
+but that would require a consistent mapping between numbers and symbols.
+
+[Example: Different number bases](https://mentalmove.github.io/BigNumbers/different_bases.html)
