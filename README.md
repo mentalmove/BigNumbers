@@ -427,7 +427,7 @@ inside `function BigNumber() { /* ... */ }`.
 
 ### Different Number Bases
 The library already includes conversions between number systems based on `10` and the most common two potencies
-`16` and `64` (and, of cause, its own number system `256` or `65536`). This can be used to convert between these
+`16` and `64` (and, of course, its own number system `256` or `65536`). This can be used to convert between these
 systems, e.g. for [converting hexadecimal PI to decimal PI](https://mentalmove.github.io/BigNumbers/number_conversion.html).     
 The underlying methods can be extended for other bases. Internally, computers know only two types
 of integer numbers: _Potencies of two_ and all the others. Therefore, a [possibly extended library](https://github.com/mentalmove/BigNumbers/blob/master/docs/BigNumberDiffBaseExtended.js) should act differently
