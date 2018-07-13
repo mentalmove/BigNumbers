@@ -63,7 +63,7 @@ only one assignment per BigNumber.
     number              - Something that can be interpreted as unsigned integer number by javascript,
                             independent of its spelling.
 ```
-```
+```js
 // Builds a BigNumber with (decimal) value 1234
 var test = new BigNumber(2, 1);
 test.from_number(0x04D2);   // Equivalent to 'test.from_number(1234)' or 'test.from_number(02322)'
@@ -125,7 +125,7 @@ test.from_decimal("1234");
 // @return Typed Array
 .to_collection ()
 ```
-```
+```js
 // Calculation is equivalent to 'parseInt(parseInt(1234 / 256) / 2) * 256 + 1234 % 256 + 43'
 var test = new BigNumber(2, 1); // bytes_per_entry does matter this time
 test.from_number( 1234 );
@@ -222,7 +222,7 @@ with two arguments. Result will not be shortened but contain a property `modulo`
 //      'modulo' BigNumber
 .divide (bignum, do_not_reduce)
 ```
-```
+```js
 // Simple approximation to PI
 var dividend = new BigNumber(1, 1);
 dividend.from_number( 22 );
@@ -303,7 +303,7 @@ a / -b = -(a / b)
 The only possible problem is caused by `a - b` in case `b` is greater than `a`. This leads to two possible solutions
 to circumvent the problem:
 - It it always known if `a >= b` or not. An example would be the _Extended Euclidian Algorithm_:
-```
+```js
 // Simple Javascript; assuming numbers are small
 function extended_euclid (a, b) {
     if ( !b )
