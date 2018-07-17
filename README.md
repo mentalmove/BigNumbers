@@ -430,7 +430,7 @@ The library already includes conversions between number systems based on `10` an
 `16` and `64` (and, of course, its own number system `256` or `65536`). This can be used to convert between these
 systems, e.g. for [converting hexadecimal PI to decimal PI](https://mentalmove.github.io/BigNumbers/number_conversion.html).     
 The underlying methods can be extended for other bases. Internally, computers know only two types
-of integer numbers: _Potencies of two_ and all the others. Therefore, a [possibly extended library](https://github.com/mentalmove/BigNumbers/blob/master/docs/BigNumberDiffBaseExtended.js) should act differently
+of integer numbers: _Potencies of two_ and all the others. Therefore, a [possible extended library](https://github.com/mentalmove/BigNumbers/blob/master/docs/BigNumberDiffBaseExtended.js) should act differently
 if the respective bases have other prime factors than two or not. Number bases `> 36`would also be possible,
 but that would require a consistent mapping between numbers and symbols.
 
@@ -439,68 +439,16 @@ but that would require a consistent mapping between numbers and symbols.
 &nbsp;
 
 ### Binary Operations
-
-#### Set single bit
+Generally, applying binary operations on complete _BigNumbers_ does not seem to be useful. Especially the famous
+**Two's complement**
 ```js
-// Adds a two potency by setting a single bit to 1
-// If already set, tries the next
-this.set_bit = set_bit;
-```
-```js
-var num1 = new BigNumber(2, 1);
-num1.from_number(996);
-num1.set_bit(3);                    // Efficient because relevant bit is 0
-console.log( num1.to_number() );
-
-var num2 = new BigNumber(2, 1);
-num2.from_number(1023);
-num2.set_bit(1);                    // Not efficient because num2 is odd; needs 10 steps
-console.log( num2.to_number() );
-```
-
-#### Unset single bit
-```js
-// Subtracts a two potency by setting a single bit to 0
-// If already unset, tries the next
-this.unset_bit = unset_bit;
-```
-```js
-var num1 = new BigNumber(3, 1);
-num1.from_number(65537);
-num1.unset_bit(1);                  // Efficient
-console.log( num1.to_number() );
-
-var num2 = new BigNumber(3, 1);
-num2.from_number(65536);
-num2.unset_bit(1);                  // Not efficient
-console.log( num2.to_number() );
-```
-
-#### Toggle all bits
-```js
-// Reversable by repeating
-this.negate = function () {
-    for ( var i = 0; i < typed_array.length; i++ )
-        typed_array[i] = (~typed_array[i]) & MAX_VALUE;
-};
-```
-```js
-var num = new BigNumber(4, 1);
-num.from_number(3060399405);
-num.negate();
-console.log( num.to_number() );     // 1234567890
-```
-
-#### Two's complement
-In computer science usually used to toggle the sign. **Not recommended for** _BigNumbers_**.**
-```js
-// Reversable by repeating
 this.twos_complement = function () {
     for ( var i = 0; i < typed_array.length; i++ )
         typed_array[i] = (~typed_array[i]) & MAX_VALUE;
     set_bit(1);
 };
 ```
+will potentially do more harm than give pleasure:
 ```js
 var A = new BigNumber(3, 1);
 A.from_number(15777216);
@@ -520,31 +468,6 @@ a = ~a;
 a++;
 console.log( a );                   // 15777216
 ```
-
-#### OR
-```js
-this.or = function (bignum) {
-    var bignum_collection = bignum.to_collection();
-    var length = Math.max(bignum_collection.length, typed_array.length);
-    var result = myself.copy(length);
-    var result_collection = result.to_collection();
-    for ( var i = 0; i < length; i++ ) {
-        if ( i < bignum_collection.length && i < typed_array.length )
-            result_collection[length - i - 1] = bignum_collection[bignum_collection.length - i - 1] | typed_array[typed_array.length - i - 1];
-        else {
-            if ( length == typed_array.length )
-                break;
-            result_collection[length - i - 1] = bignum_collection[bignum_collection.length - i - 1];
-        }
-    }
-    return reduce(result);
-};
-```
-```js
-var num1 = new BigNumber(2, 1);
-num1.from_number(645);
-var num2 = new BigNumber(2, 1);
-num2.from_number(358);
-console.log( num1.to_number() + " OR " + num2.to_number() + " = " + num1.or(num2).to_number() );    // 999
-console.log( num1.to_number() + " + " + num2.to_number() + " = " + num1.add(num2).to_number() );    // 1003
-```
+Nevertheless, those who are keen to do it may take the following as inspiration.     
+[Code: Binary Operations](https://github.com/mentalmove/BigNumbers/blob/master/docs/BigNumberBinaryExtended.js)  
+[Example: Binary Operations](https://mentalmove.github.io/BigNumbers/binary_operations.html)
