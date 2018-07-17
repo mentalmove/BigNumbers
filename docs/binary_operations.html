@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Big Numbers... Binary Operations</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type="text/javascript" src="BigNumberBinaryExtended.js"></script>
+        
+        <script type="text/javascript">
+            
+            function iD (x) {
+                return document.getElementById(x);
+            }
+            function debug (msg) {
+                iD("debug_zone").innerHTML += "<br>" + msg;
+            }
+            
+            var console = window.console || {};
+            console.log = console.log || function (x) {};
+            var _log = console.log;
+            console.log = debug;
+            
+            function display_rectangle (bignum) {
+                var collection = bignum.to_collection();
+                var bits = collection.BYTES_PER_ELEMENT * 8;
+                var row = parseInt(Math.sqrt(bits * collection.length));
+                if ( !row )
+                    return;
+                var msg = "";
+                var counter = 0;
+                for ( var i = 0; i < collection.length; i++ ) {
+                    for ( var j = (bits - 1); j >= 0; j-- ) {
+                        msg += (collection[i] & (1 << j)) ? "x" : "<span style='color: silver'>o</span>";
+                        msg += " ";
+                        if ( ++counter == row ) {
+                            console.log( msg );
+                            msg = "";
+                            counter = 0;
+                        }
+                    }
+                }
+                if ( msg.length )
+                    console.log( msg );
+                console.log( "" );
+            }
+            
+        </script>
+        
+    </head>
+    <body>
+        
+        <div class="section">
+            <pre id="debug_zone"></pre>
+        </div>
+        
+        <footer>
+            <p>
+                <a href="index.html">
+                    Main Page
+                </a>
+            </p>
+            <p> </p>
+            <p><small><small>Also watch console</small></small></p>
+        </footer>
+        
+        <script type="text/javascript">
+                
+            var first = new BigNumber(18);
+            first.from_decimal( "22298024933964082114611397543900210389852159" );
+
+            var second = new BigNumber(18);
+            second.from_decimal( "1363955396168032156102406753143824064512" );
+
+            console.log( "<span style='color: gray'>" + first.to_number() + "</span>" );
+            console.log( "" );
+            display_rectangle(first);
+            _log( first.to_collection() );
+            console.log( "" );
+
+            console.log( "<span style='color: gray'>" + second.to_number() + "</span>" );
+            console.log( "" );
+            display_rectangle(second);
+            _log( second.to_collection() );
+
+            _log( "" );
+
+            console.log( "" );
+            console.log( "---" );
+            console.log( "" );
+            console.log( "" );
+
+            var negaty = first.copy();
+            negaty.negate();
+            console.log( "<span style='color: gray'>" + "~" + first.to_number() + " = " + negaty.to_number() +  "</span>" );
+            console.log( "" );
+            display_rectangle(negaty);
+            _log( negaty.to_collection() );
+            console.log( "" );
+
+            var shifty = second.copy();
+            shifty.shift_by(13);
+            console.log( "<span style='color: gray'>" + second.to_number() + " << 13 = " + shifty.to_number() +  "</span>" );
+            console.log( "" );
+            display_rectangle(shifty);
+            _log( shifty.to_collection() );
+            console.log( "" );
+
+            var ory = first.or(second);
+            console.log( "<span style='color: gray'>" + first.to_number() + " OR " + second.to_number() + " = " + ory.to_number() +  "</span>" );
+            console.log( "" );
+            display_rectangle(ory);
+            _log( ory.to_collection() );
+            console.log( "" );
+
+            var xory = first.xor(second);
+            console.log( "<span style='color: gray'>" + first.to_number() + " XOR " + second.to_number() + " = " + xory.to_number() +  "</span>" );
+            console.log( "" );
+            display_rectangle(xory);
+            _log( xory.to_collection() );
+            console.log( "" );
+
+            var andy = first.and(second, true);
+            console.log( "<span style='color: gray'>" + first.to_number() + " AND " + second.to_number() + " = " + andy.to_number() +  "</span>" );
+            console.log( "" );
+            display_rectangle(andy);
+            _log( andy.to_collection() );
+
+            console.log( "" );
+            console.log( "---" );
+            console.log( "" );
+            console.log( "" );
+
+            var addy = first.add(second);
+            console.log( "<span style='color: gray'>" + first.to_number() + " + " + second.to_number() + " = " + addy.to_number()  + "</span>" );
+            console.log( "" );
+            display_rectangle(addy);
+            _log( addy.to_collection() );
+            console.log( "" );
+
+            var subtracty = first.subtract(second);
+            console.log( "<span style='color: gray'>" + first.to_number() + " - " + second.to_number() + " = " + subtracty.to_number()  + "</span>" );
+            console.log( "" );
+            display_rectangle(subtracty);
+            _log( subtracty.to_collection() );
+            console.log( "" );
+
+            var multy = first.multiplicate(second);
+            console.log( "<span style='color: gray'>" + first.to_number() + " * " + second.to_number() + " = " + multy.to_number()  + "</span>" );
+            console.log( "" );
+            display_rectangle(multy);
+            _log( multy.to_collection() );
+            console.log( "" );
+
+            var dividy = first.divide(second, true);
+            console.log( "<span style='color: gray'>" + first.to_number() + " / " + second.to_number() + " = " + dividy.to_number() + " R " + dividy.modulo.to_number() + "</span>" );
+            console.log( "" );
+            display_rectangle(dividy);
+            _log( dividy.to_collection() );
+                
+        </script>
+        
+    </body>
+</html>
