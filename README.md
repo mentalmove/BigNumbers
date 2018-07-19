@@ -477,7 +477,7 @@ This is extremely fast and more or less reliable for fixed memory sizes what sta
 the idea behind _BigNumbers_. Floating point numbers of variable size (i.e. integer part left of the point,
 fractal part right of the point) can be realised using strings; this is an easy approach for humans,
 but unfortunately slow.     
-A third method would be pairs of numbers or BigNumbers; this can be done without touching the library, i.e.
+A third method would be pairs of numbers of BigNumbers; this can be done without touching the library, i.e.
 ```js
 // @param numerator BigNumber
 // @param denominator BigNumber
