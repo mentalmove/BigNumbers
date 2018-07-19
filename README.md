@@ -629,7 +629,7 @@ this.twos_complement = function () {
     set_bit(1);
 };
 ```
-will potentially do more harm than give pleasure:
+(although used in 3 of 4 random cases in function `minus()` - but only for single entries) will potentially do more harm than give pleasure:
 ```js
 var A = new BigNumber(3, 1);
 A.from_number(15777216);
