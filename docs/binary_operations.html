@@ -45,6 +45,51 @@
                 console.log( "" );
             }
             
+            function fill_additional (msg) {
+                if ( !iD("additional") )
+                    return;
+                iD("additional").innerHTML += "<br>" + msg;
+            }
+            
+            var indices = [-144,-143,-142,-141,-140,-139,-138,-137,-136,-135,-134,-133,-132,131,122,-121,-120,118,111,-109,-108,-104,-103,-102,-101,-97,-96,-93,92,89,-88,-85,-84,-81,79,78,-76,-73,-72,-69,67,66,-64,-61,-60,-57,56,53,-52,-49,-48,-44,-43,-42,-41,-37,-36,34,27,-25,-24,23,14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1];
+            function set_or_unset (index) {
+                if ( index >= indices.length )
+                    return;
+                var value = indices[index];
+                var command, literal;
+                if ( value >= 0 ) {
+                    command = mutable.set_bit;
+                    literal = "SET_BIT";
+                }
+                else {
+                    command = mutable.unset_bit;
+                    literal = "UNSET_BIT";
+                    value = Math.abs(value);
+                }
+                iD("additional").innerHTML = "";
+                var msg = "<span style='color: silver'>(" + mutable.to_number() + ")</span>." + literal + "(" + value + ") = ";
+                command(value);
+                msg += "<span style='color: gray'>" + mutable.to_number() + "</span>";
+                console.log( msg );
+                console.log( "" );
+                display_rectangle(mutable);
+                
+                if ( index < (indices.length - 1) ) {
+                    setTimeout(set_or_unset, 222, (index + 1));
+                    return;
+                }
+                
+                var tmp = [];
+                var random_index;
+                while ( indices.length ) {
+                    random_index = Math.floor(Math.random() * indices.length);
+                    tmp.push(0 - indices[random_index]);
+                    indices.splice(random_index, 1);
+                }
+                indices = tmp;
+                setTimeout(set_or_unset, 3333, 0);
+            }
+            
         </script>
         
     </head>
@@ -88,11 +133,13 @@
             console.log( "" );
             console.log( "---" );
             console.log( "" );
+            
+            console.log( "<span id='additional'></span>" );
             console.log( "" );
 
             var negaty = first.copy();
             negaty.negate();
-            console.log( "<span style='color: gray'>" + "~" + first.to_number() + " = " + negaty.to_number() +  "</span>" );
+            console.log( "<span style='color: gray'>" + "NOT " + first.to_number() + " = " + negaty.to_number() +  "</span>" );
             console.log( "" );
             display_rectangle(negaty);
             _log( negaty.to_collection() );
@@ -157,6 +204,15 @@
             console.log( "" );
             display_rectangle(dividy);
             _log( dividy.to_collection() );
+            
+            console.log = fill_additional;
+            var mutable = first.copy();
+            console.log( "<span style='color: silver'>" + mutable.to_number() + "</span>" );
+            console.log( "" );
+            display_rectangle(mutable);
+            
+            setTimeout(set_or_unset, 6666, 0);
+            
                 
         </script>
         
