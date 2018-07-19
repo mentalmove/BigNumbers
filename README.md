@@ -41,6 +41,25 @@ new BigNumber(byte_length[, bytes_per_entry[, src_typed_array]])
     src_typed_array     - Optional. To build a BigNumber based on the value of another BigNumber.
                             Should be handled with care.
 ```
+```js
+var a = 1000;
+var b = 100000;
+
+// Similar
+var A = new BigNumber(2, 2);
+A.from_number(1000);
+console.log( A.to_number() );   // 1000
+
+// Attention
+var B = new BigNumber(2, 2);
+B.from_number(100000);          // Largest possible number for two bytes is 65535
+console.log( B.to_number() );   // 34464
+
+// But...
+var C = new BigNumber(12, 2);
+C.from_decimal("10000000000000000000000000000");    // Size itself is not a problem
+console.log( C.to_number() );   // 10000000000000000000000000000
+```
 &nbsp;
 ```
 // Creates a (real) duplicate
@@ -51,10 +70,23 @@ new BigNumber(byte_length[, bytes_per_entry[, src_typed_array]])
     bytes               - Optional. If provided and greater than original BigNumber's byte_length,
                             the copy is filled with leading zero entries.
 ```
+```js
+var a = 123;
+var b = a;
+a <<= 1;
+
+var A = new BigNumber(1, 1);
+A.from_number(123);
+
+// Similar
+var B = A.copy();
+A.shift_by(1);                  // Something that alters the original
+console.log( B.to_number() );   // 123
+```
 &nbsp;
 
 ### Assigning values
-Technically, **Binary OR** is used; those who are not familiar with this operation should do
+Technically, sometimes **Binary OR** is used; those who are not familiar with this operation should do
 only one assignment per BigNumber. **Existing values cannot be cleared by writing**
 `repective_big_number.from_number(0)`**.**
 
@@ -148,6 +180,35 @@ Alters the original value; the original number therefore should have a suitable 
 .shift_by (bit)
     bit                 - Positive or negative integer number
 ```
+```js
+var a = 25;
+var b = 25;
+
+a = a * Math.pow(2, 1);
+b = parseInt(b * Math.pow(2, -3));
+a = a * Math.pow(2, 3);
+
+var A = new BigNumber(1, 1);
+var B = new BigNumber(1, 1);
+A.from_number(25);
+B.from_number(25);
+
+// Similar
+A.shift_by(1);
+B.shift_by(-3);
+console.log( A.to_number() );   // 50
+console.log( B.to_number() );   // 3
+
+// Attention
+A.shift_by(3);                  // One byte is not enough
+console.log( A.to_number() );   // 144
+
+// But...
+var AA = new BigNumber(2, 1);
+AA.from_number(25);
+AA.shift_by(4);
+console.log( AA.to_number() );  // 400
+```
 [Example: All bits (Shift left)](https://mentalmove.github.io/BigNumbers/shift_left.html)  
 [Example: Collatz (Shift right)](https://mentalmove.github.io/BigNumbers/shift_right.html)
 &nbsp;  
@@ -168,6 +229,31 @@ a suitable size, or the result will be truncated; `add()` will always return a _
 // @return BigNumber
 .add (argument1[, argument2[, argument3[, ...]]])
 ```
+```js
+var a = 200;
+var b = 133;
+var c = a + b;
+a += b;
+
+var A = new BigNumber(1, 1);
+A.from_number(200);
+var B = new BigNumber(1, 1);
+B.from_number(133);
+
+// Similar
+var C = A.add(B);
+console.log( C.to_number() );   // 333
+
+// Attention
+A.increase_by(B);               // One byte is not enough to take the sum
+console.log( A.to_number() );   // 77
+
+// But...
+A = new BigNumber(1, 1);
+A.from_number(200);
+A = A.add(B);                   // 'A = A + B' instead of 'A += B' always works
+console.log( A.to_number() );   // 333
+```
 [Example: Fibonacci (Addition)](https://mentalmove.github.io/BigNumbers/addition.html)
 &nbsp;  
 &nbsp;
@@ -186,6 +272,30 @@ while `subtract()` returns a new _BigNumber_. Results lower than zero will autom
 // @return BigNumber
 .subtract (argument1[, argument2[, argument3[, ...]]])
 ```
+```js
+var a = 200;
+var b = 123;
+var c = a - b;
+var d = b - a;
+
+var A = new BigNumber(1, 1);
+A.from_number(200);
+var B = new BigNumber(1, 1);
+B.from_number(123);
+
+// Similar
+var C = A.subtract(B);
+console.log( C.to_number() );   // 77
+
+// Attention
+var D = B.subtract(A);          // Result lower than zero
+console.log( D.to_number() );   // 0
+
+// But...
+var DD = A.subtract(B);         // (B - A) = -(A - B)               See Topic 'Negative Values'
+if ( DD.to_collection().length != 1 || DD.to_collection()[0] )      // Only meaningful if A != B
+    console.log( "-" + DD.to_number() );        // -77
+```
 [Example: Fibonacci (Subtraction)](https://mentalmove.github.io/BigNumbers/subtraction.html)
 &nbsp;  
 &nbsp;
@@ -199,6 +309,20 @@ Result will always have the correct (i.e. increased) byte length.
 // @return BigNumber
 .multiplicate (multiplicator[, FOR_INTERNAL_USAGE_ONLY])
 ```
+```js
+var a = 18;
+var b = 37;
+var c = a * b;
+
+var A = new BigNumber(1, 1);
+A.from_number(18);
+var B = new BigNumber(1, 1);
+B.from_number(37);
+
+// Similar
+var C = A.multiplicate(B);
+console.log( C.to_number() );   // 666
+```
 [Example: Faculty (Multiplication)](https://mentalmove.github.io/BigNumbers/multiplication.html)
 &nbsp;  
 &nbsp;
@@ -211,6 +335,20 @@ Used with one argument, result will always have the correct (i.e. decreased) byt
 // @return BigNumber
 .divide (divisor)
 ```
+```js
+var a = 12345;
+var b = 67;
+var c = parseInt(a / b);
+
+var A = new BigNumber(2, 1);
+var B = new BigNumber(1, 1);    // bytes_per_entry matters, size doesn't
+A.from_number(12345);
+B.from_number(67);
+
+// Similar
+var C = A.divide(B);
+console.log( C.to_number() );   // 184
+```
 [Example: Faculty (Division)](https://mentalmove.github.io/BigNumbers/division.html)
 &nbsp;  
 &nbsp;
@@ -220,6 +358,20 @@ Used with one argument, result will always have the correct (i.e. decreased) byt
 // @param divisor BigNumber
 // @return BigNumber
 .mod (divisor)
+```
+```js
+var a = 12345;
+var b = 67;
+var c = a % b;
+
+var A = new BigNumber(2, 1);
+var B = new BigNumber(1, 1);
+A.from_number(12345);
+B.from_number(67);
+
+// Similar
+var C = A.mod(B);
+console.log( C.to_number() );   // 17
 ```
 [Example: Fibonacci (Modulo)](https://mentalmove.github.io/BigNumbers/modulo.html)
 &nbsp;  
@@ -259,6 +411,34 @@ Should be used without arguments to leave the original untouched.
 // @return BigNumber
 .sqrt ([FOR_INTERNAL_USAGE_ONLY])
     FOR_INTERNAL_USAGE_ONLY - Not recommended
+```
+```js
+var a = 256;
+var b = 1000;
+var c = Math.sqrt(a);
+var d = Math.sqrt(b);
+
+var A = new BigNumber(2, 2);
+var B = new BigNumber(2, 2);
+A.from_number(256);
+B.from_number(1000);
+
+// Similar
+var C = A.sqrt();
+console.log( C.to_number() );   // 16
+
+// Attention
+var D = B.sqrt();               // Truncated - fractal part is lost
+console.log( D.to_number() );   // 31
+
+// But...
+var Extend = new BigNumber(14, 2);                              // Precision itself is not a problem
+Extend.from_decimal("1000000000000000000000000000000");
+var B_extended = B.multiplicate(Extend);
+var D_extended = D.multiplicate(Extend.sqrt());
+var D_precise = B_extended.sqrt();
+var D_fractal = D_precise.subtract(D_extended);
+console.log( D.to_number() + "." + D_fractal.to_number() );     // 31.622776601683793
 ```
 [Example: Golden ratio (Square root)](https://mentalmove.github.io/BigNumbers/sqrt.html)
 &nbsp;  
