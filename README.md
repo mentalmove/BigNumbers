@@ -551,6 +551,7 @@ function Rational (numerator, denominator) {
     var is_integer = (mod_collection.length == 1 && !mod_collection[0]);
 }
 ```
+**These pairse represent an exact number, not only an approximation.**
 To keep it readable, the above function is not performance optimised.     
 [Example: Rational Numbers](https://mentalmove.github.io/BigNumbers/rational_numbers.html)
 
