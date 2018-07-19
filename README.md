@@ -453,6 +453,20 @@ Result is possibly _really_ large.
 .pow (exp)
     exp                 - Must be unsigned integer
 ```
+```js
+var a = 17;
+var b = 19;
+var c = Math.pow(a, b);
+
+var A = new BigNumber(2, 2);
+var B = new BigNumber(2, 2);
+A.from_number(17);
+B.from_number(19);
+
+// Similar
+var C = A.pow(B);               // 'A.pow(b)' would also work
+console.log( C.to_number() );   // 239072435685151324847153
+```
 [Example: Exponentiation](https://mentalmove.github.io/BigNumbers/exponentiation.html)
 &nbsp;  
 &nbsp;
