@@ -506,11 +506,29 @@ Exponentiation and afterwards Modulo-Division, but with much lower effort.
 Widely used in cryptography.
 Both arguments can be optionally Numbers or BigNumbers.
 ```
-// Result is never greater than (mod - 1)^2
+// Result is never greater than (mod - 1)²
 // @param exp Number or BigNumber
 // @param mod Number or BigNumber
 // @return BigNumber
 .mod_pow (exp, mod)
+```
+```js
+var a = 17;
+var b = 11;
+var intermediate = Math.pow(a, b);
+var c = intermediate % 100;
+
+console.log( intermediate );    // 34271896307633
+console.log( c );               // 33
+
+var A = new BigNumber(2, 2);
+var B = new BigNumber(2, 2);
+A.from_number(17);
+B.from_number(11);
+
+// Similar, much more efficient
+var C = A.mod_pow(B, 100);      // Intermediate results will never become greater than 99² = 9801
+console.log( C.to_number() );   // 33
 ```
 [Example: RSA (Modulo-Exponentiation)](https://mentalmove.github.io/BigNumbers/mod_pow.html)
 
