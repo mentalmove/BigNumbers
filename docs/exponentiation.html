@@ -35,7 +35,7 @@
                 var max = Math.max(10, reference.to_number() / 2);
                 for ( var i = 1; i <= max; i++ ) {
                     result = reference.pow(i);
-                    console.log( reference.to_number() + "^" + i + " = " + result.to_number() );
+                    console.log( reference.to_number() + "<sup>" + i + "</sup> = " + result.to_number() );
                     _log( result.to_collection() );
                 }
                 var br = document.createElement("br");
