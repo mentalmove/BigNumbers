@@ -31,7 +31,7 @@
                     result = new BigNumber(num.to_collection().length * 2);
                     result.from_decimal( sqrt5.replace(/2/, "3") );
                     result.shift_by(-1);
-                    msg = "(1 + &radic;5) / 2 &asymp; " + result.to_number().toString().replace(/^16/, "1.6");
+                    msg = "(1 + &radic;5) : 2 &asymp; " + result.to_number().toString().replace(/^16/, "1.6");
                     num = num.multiplicate(hundred);
                     console.log( msg );
                 }
