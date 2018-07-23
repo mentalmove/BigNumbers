@@ -466,6 +466,37 @@ B.from_number(19);
 // Similar
 var C = A.pow(B);               // 'A.pow(b)' would also work
 console.log( C.to_number() );   // 239072435685151324847153
+
+
+// By the way...
+var aa = 47;
+var bb = 11;
+
+var AA = new BigNumber(2, 2);
+var BB = new BigNumber(2, 2);
+AA.from_number(47);
+BB.from_number(11);
+
+// Javascript is incorrect! '47^n' must not end with '00'
+var cc = Math.pow(aa, bb);      // Tested in different browsers
+console.log( cc );              // 2472159215084012500
+
+// Correct
+var CC = AA.pow(BB);
+console.log( CC.to_number() );  // 2472159215084012303
+
+// Check of last three digits:
+//  1)   1 ⋅ 47 =    47;    47 mod 1000 =  47
+//  2)  47 ⋅ 47 =  2209;  2209 mod 1000 = 209
+//  3) 209 ⋅ 47 =  9823;  9823 mod 1000 = 823
+//  4) 823 ⋅ 47 = 38681; 38681 mod 1000 = 681
+//  5) 681 ⋅ 47 = 32007; 32007 mod 1000 =   7
+//  6)   7 ⋅ 47 =   329;   329 mod 1000 = 329
+//  7) 329 ⋅ 47 = 15463; 15463 mod 1000 = 463
+//  8) 463 ⋅ 47 = 21761; 21761 mod 1000 = 761
+//  9) 761 ⋅ 47 = 35767; 35767 mod 1000 = 767
+// 10) 767 ⋅ 47 = 36049; 36049 mod 1000 =  49
+// 11)  49 ⋅ 47 =  2303;  2303 mod 1000 = 303
 ```
 [Example: Exponentiation](https://mentalmove.github.io/BigNumbers/exponentiation.html)
 &nbsp;  
