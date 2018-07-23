@@ -25,7 +25,7 @@
             function modulo_di_pisa () {
                 var taken = collection.shift();
                 var result = taken.mod(collection[1]);
-                var msg = taken.to_number() + " % " + collection[1].to_number() + " = " + result.to_number();
+                var msg = taken.to_number() + " mod " + collection[1].to_number() + " = " + result.to_number();
                 collection.push(result);
                 console.log( msg );
                 
