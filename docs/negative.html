@@ -96,7 +96,7 @@
                     if ( first.negative ) {
                         copied_first = first.copy();
                         copied_second = second.copy();
-                        console.log( display_number(first) + " * " + display_number(second) + " = " + display_number(copied_first) + " * " + display_number(copied_second) );
+                        console.log( display_number(first) + " &sdot; " + display_number(second) + " = " + display_number(copied_first) + " &sdot; " + display_number(copied_second) );
                         result = m(copied_first, copied_second);
                         return result;
                     }
@@ -106,13 +106,13 @@
                 }
                 if ( first.negative ) {
                     copied_first = first.copy();
-                    console.log( display_number(first) + " * " + display_number(second) + " = -(" + display_number(copied_first) + " * " + display_number(second) + ")" );
+                    console.log( display_number(first) + " &sdot; " + display_number(second) + " = -(" + display_number(copied_first) + " &sdot; " + display_number(second) + ")" );
                     result = m(copied_first, second);
                     result.negative = true;
                     return result;
                 }
                 copied_second = second.copy();
-                console.log( display_number(first) + " * " + display_number(second) + " = -(" + display_number(first) + " * " + display_number(copied_second) + ")" );
+                console.log( display_number(first) + " &sdot; " + display_number(second) + " = -(" + display_number(first) + " &sdot; " + display_number(copied_second) + ")" );
                 result = m(first, copied_second);
                 result.negative = true;
                 return result;
@@ -123,7 +123,7 @@
                     if ( first.negative ) {
                         copied_first = first.copy();
                         copied_second = second.copy();
-                        console.log( display_number(first) + " / " + display_number(second) + " = " + display_number(copied_first) + " / " + display_number(copied_second) );
+                        console.log( display_number(first) + " : " + display_number(second) + " = " + display_number(copied_first) + " : " + display_number(copied_second) );
                         result = d(copied_first, copied_second);
                         return result;
                     }
@@ -143,19 +143,19 @@
                 }
                 if ( first.negative ) {
                     copied_first = first.copy();
-                    console.log( display_number(first) + " / " + display_number(second) + " = -(" + display_number(copied_first) + " / " + display_number(second) + ")" );
+                    console.log( display_number(first) + " : " + display_number(second) + " = -(" + display_number(copied_first) + " : " + display_number(second) + ")" );
                     result = d(copied_first, second);
                     result.negative = true;
                     return result;
                 }
                 copied_second = second.copy();
-                console.log( display_number(first) + " / " + display_number(second) + " = -(" + display_number(first) + " / " + display_number(copied_second) + ")" );
+                console.log( display_number(first) + " : " + display_number(second) + " = -(" + display_number(first) + " : " + display_number(copied_second) + ")" );
                 result = d(first, copied_second);
                 result.negative = true;
                 return result;
             }
             var arithmetics = [a, s, m, d];
-            var display_operators = ["+", "-", "*", "/"];
+            var display_operators = ["+", "-", "&sdot;", ":"];
             
         </script>
         
