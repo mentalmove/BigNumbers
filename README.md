@@ -72,14 +72,14 @@ console.log( C.to_number() );   // 10000000000000000000000000000
 ```
 ```js
 var a = 123;
-var b = a;
-a <<= 1;
+var b = a;                      // 'a' and 'b' point to the same memory address...
+a <<= 1;                        // ...from now on, 'a' has its own memory address
 
 var A = new BigNumber(1, 1);
 A.from_number(123);
 
 // Similar
-var B = A.copy();
+var B = A.copy();               // 'A' and 'B' have different memory addresses
 A.shift_by(1);                  // Something that alters the original
 console.log( B.to_number() );   // 123
 ```
