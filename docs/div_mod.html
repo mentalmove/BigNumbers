@@ -51,7 +51,7 @@
                 
                 var div = a.divide(b, true);
                 var mod = div.modulo;
-                greece.innerHTML = shorten(a.to_number()) + " / " + b.to_number() + " = " + shorten(div.to_number());
+                greece.innerHTML = shorten(a.to_number()) + " : " + b.to_number() + " = " + shorten(div.to_number());
                 var mod_collection = mod.to_collection();
                 if ( mod_collection.length > 1 || mod_collection[0] )
                     greece.innerHTML += " <span style='color: silver'>R </span>" + mod.to_number();
@@ -65,10 +65,10 @@
                     var mul = collection[1].multiplicate(div);
                     var result = collection[0].add(mul);
                     if ( collection[1].negative )
-                        text = shorten(result.to_number()) + " * " + b.to_number() + " - " + collection[1].to_number() + " * " + shorten(a.to_number()) + " = " + 1;
+                        text = shorten(result.to_number()) + " &sdot; " + b.to_number() + " - " + collection[1].to_number() + " &sdot; " + shorten(a.to_number()) + " = " + 1;
                     else {
                         result.negative = true;
-                        text = collection[1].to_number() + " * " + a.to_number() + " - " + result.to_number() + " * " + b.to_number() + " = " + 1;
+                        text = collection[1].to_number() + " &sdot; " + a.to_number() + " - " + result.to_number() + " &sdot; " + b.to_number() + " = " + 1;
                     }
                     
                     var col_0_col = collection[0].to_collection();
@@ -81,7 +81,7 @@
                     other_text += " - ";
                     other_text += ((col_1_col.length > 1 || col_1_col[0]) && collection[1].negative) ? "-" : "";
                     other_text += collection[1].to_number();
-                    other_text += " * " + shorten(div.to_number()) + " = ";
+                    other_text += " &sdot; " + shorten(div.to_number()) + " = ";
                     other_text += ((result_col.length > 1 || result_col[0]) && result.negative) ? "-" : "";
                     other_text += shorten(result.to_number());
                     
@@ -149,7 +149,7 @@
             console.log( "<i>p2</i> [hex]" );
             console.log( p2.to_hex() );
             console.log( "" );
-            console.log( "<i>modulus</i> = <i>p1</i> * <i>p2</i> [hex]" );
+            console.log( "<i>modulus</i> = <i>p1</i> &sdot; <i>p2</i> [hex]" );
             console.log( hex_displayable(modulus.to_hex()) );
             console.log( "" );
             
@@ -161,7 +161,7 @@
             p2.decrease_by(one);
             var phi = p1.multiplicate(p2);
             
-            console.log( "<i>phi</i> = (<i>p1</i> - 1) * (<i>p2</i> - 1) [hex]" );
+            console.log( "<i>phi</i> = (<i>p1</i> - 1) &sdot; (<i>p2</i> - 1) [hex]" );
             console.log( hex_displayable(phi.to_hex()) );
             console.log( "" );
             console.log( "<i>e</i> [decimal]" );
