@@ -33,7 +33,7 @@
             
             function decode (encoded) {
                 
-                console.log( "<i>decoded</i> = <i>encoded</i> ^ <i>second prime</i> % <i>modulus</i> [hex]" );
+                console.log( "<i>decoded</i> = <i>encoded</i><sup><i>second prime</i></sup> mod <i>modulus</i> [hex]" );
                 var decoded = encoded.mod_pow(second_prime, modulus);
                 console.log( hex_displayable(decoded.to_hex()) );
                 _log( decoded.to_collection() );
@@ -46,7 +46,7 @@
                 iD("the_link").style.display = "none";
                 
                 var encoded = clear.mod_pow(first_prime, modulus);
-                console.log( "<i>encoded</i> = <i>clear text</i> ^ <i>first prime</i> % <i>modulus</i> [hex]" );
+                console.log( "<i>encoded</i> = <i>clear text</i><sup><i>first prime</i></sup> mod <i>modulus</i> [hex]" );
                 console.log( hex_displayable(encoded.to_hex()) );
                 _log( encoded.to_collection() );
                 
