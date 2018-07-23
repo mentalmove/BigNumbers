@@ -635,13 +635,13 @@ a - -b = a + b
 -a - b = -(a + b)
 -a - -b = -a + b = b - a
 
-a * -b = -(a * b)
--a * b = -(a * b)
--a * -b = a * b
+a ⋅ -b = -(a ⋅ b)
+-a ⋅ b = -(a ⋅ b)
+-a ⋅ -b = a ⋅ b
 
-a / -b = -(a / b)
--a / b = -(a / b)
--a / -b = a / b
+a : -b = -(a : b)
+-a : b = -(a : b)
+-a : -b = a : b
 ```
 The only possible problem is caused by `a - b` in case `b` is greater than `a`. This leads to two possible solutions
 to circumvent the problem:
