@@ -477,7 +477,7 @@ var BB = new BigNumber(2, 2);
 AA.from_number(47);
 BB.from_number(11);
 
-// Javascript is incorrect! '47^n' must not end with '00'
+// Javascript is incorrect! 47ⁿ must not end with '00'
 var cc = Math.pow(aa, bb);      // Tested in different browsers
 console.log( cc );              // 2472159215084012500
 
