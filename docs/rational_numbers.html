@@ -99,7 +99,7 @@
                         return "<math><mfrac><mi>" + n + "</mi><mi>" + d + "</mi></mfrac></math>";
                     n = "" + n;
                     d = "" + d;
-                    var operators = /[+\-*\/^]/;
+                    var operators = /[:;+\-*\/^]/;
                     n = (operators.test(n)) ? "(" + n + ")" : n;
                     d = (operators.test(d)) ? "(" + d + ")" : d;
                     return "<sup>" + n + "</sup>/<sub>" + d + "</sub>";
@@ -274,14 +274,14 @@
             var ab_div_cd = ab.divide(cd);
             var ab_div_dc = ab.divide(dc);
             
-            console.log( rational.rational(a.to_number(), b.to_number()) + " * " + rational.rational(c.to_number(), d.to_number()) + " = "
-                    + ab.rational() + " * " + cd.rational() + " = "
+            console.log( rational.rational(a.to_number(), b.to_number()) + " &sdot; " + rational.rational(c.to_number(), d.to_number()) + " = "
+                    + ab.rational() + " &sdot; " + cd.rational() + " = "
                     + ab_mul_cd.rational() + " &asymp; " + ab_mul_cd.decimal(50) + "..." );
-            console.log( rational.rational(a.to_number(), b.to_number()) + " / " + rational.rational(c.to_number(), d.to_number()) + " = "
-                    + ab.rational() + " / " + cd.rational() + " = "
+            console.log( rational.rational(a.to_number(), b.to_number()) + " : " + rational.rational(c.to_number(), d.to_number()) + " = "
+                    + ab.rational() + " : " + cd.rational() + " = "
                     + ab_div_cd.rational() + " &asymp; " + ab_div_cd.decimal(50) + "..." );
-            console.log( rational.rational(a.to_number(), b.to_number()) + " / " + rational.rational(d.to_number(), c.to_number()) + " = "
-                    + ab.rational() + " / " + dc.rational() + " = "
+            console.log( rational.rational(a.to_number(), b.to_number()) + " : " + rational.rational(d.to_number(), c.to_number()) + " = "
+                    + ab.rational() + " : " + dc.rational() + " = "
                     + ab_div_dc.rational() + " &asymp; " + ab_div_dc.decimal(50) + "..." );
             
             
@@ -293,11 +293,11 @@
             
             console.log( "For a more efficient method, see <a href='number_conversion.html'>Hex PI calculation</a> - Page" );
             console.log( "" );
-            console.log( "<big>" + rational.rational("&pi;", 4) + " = " + rational.rational(1, 2) + " * (1 + "
-                    + rational.rational(1, "1*3")
-                    + " + " + rational.rational("1*2", "1*3*5")
-                    + " + " + rational.rational("1*2*3", "1*3*5*7")
-                    + " + " + rational.rational("1*2*3*4", "1*3*5*7*9") + " + ...)</big>" );
+            console.log( "<big>" + rational.rational("&pi;", 4) + " = " + rational.rational(1, 2) + " &sdot; (1 + "
+                    + rational.rational(1, "1&sdot;3")
+                    + " + " + rational.rational("1&sdot;2", "1&sdot;3&sdot;5")
+                    + " + " + rational.rational("1&sdot;2&sdot;3", "1&sdot;3&sdot;5&sdot;7")
+                    + " + " + rational.rational("1&sdot;2&sdot;3&sdot;4", "1&sdot;3&sdot;5&sdot;7&sdot;9") + " + ...)</big>" );
             console.log( "" );
             
             var single_two = new BigNumber(1, 2);
@@ -308,7 +308,7 @@
             var msg = rational.rational("&pi;", 2) + " &asymp; " + half_pi.rational();
             msg += " => ";
             pi = half_pi.multiplicate(two);
-            msg += "&pi; &asymp; " + half_pi.rational() + " * 2 &asymp; " + pi.rational();
+            msg += "&pi; &asymp; " + half_pi.rational() + " &sdot; 2 &asymp; " + pi.rational();
             msg += " &asymp; " + pi.decimal();
             console.log( msg );
             
@@ -326,27 +326,27 @@
                 den = new BigNumber(1, 2);
                 den.from_number(2 * i + 1);
                 tmp_factor = new Rational(num, den);
-                remember = factor.rational() + " * " + tmp_factor.rational();
+                remember = factor.rational() + " &sdot; " + tmp_factor.rational();
                 factor = factor.multiplicate(tmp_factor);
                 
                 nn = "1";
                 nns = (i == 1) ? "1" : "";
                 for ( j = 2; j <= i; j++ ) {
-                    nn += "*" + j;
+                    nn += "&sdot;" + j;
                     if ( (j % 2) )
                         continue;
                     if ( nns )
-                        nns += "*";
+                        nns += "&sdot;";
                     nns += "" + j;
                 }
                 dd = "1";
                 dds = "";
                 for ( j = 1; j <= i; j++ ) {
-                    dd += "*" + (2 * j + 1);
+                    dd += "&sdot;" + (2 * j + 1);
                     if ( (2 * j + 1) <= i )
                         continue;
                     if ( dds )
-                        dds += "*";
+                        dds += "&sdot;";
                     dds += "" + (2 * j + 1);
                 }
                 msg = "<br>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -364,7 +364,7 @@
                 msg += " &asymp; " + half_pi.rational();
                 msg += "<br>";
                 pi = half_pi.multiplicate(two);
-                msg += "&pi; &asymp; " + half_pi.rational() + " * 2 &asymp; " + pi.rational();
+                msg += "&pi; &asymp; " + half_pi.rational() + " &sdot; 2 &asymp; " + pi.rational();
                 dec_pi = pi.decimal(prec);
                 while ( dec_pi.length < (prec + 2) )
                     dec_pi += "0";
