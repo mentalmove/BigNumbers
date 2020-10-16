@@ -626,7 +626,7 @@ function BigNumber (byte_length, bytes_per_entry, src_typed_array) {
     function from_base_32 (value_string) {
         var raw_collection = value_string.split("");
         var collection = [];
-        for ( i = 0; i < raw_collection.length; i++ ) {
+        for ( var i = 0; i < raw_collection.length; i++ ) {
             if ( isNaN(raw_collection[i]) )
                 collection.push( raw_collection[i].toUpperCase().charCodeAt(0) - 55 );
             else
